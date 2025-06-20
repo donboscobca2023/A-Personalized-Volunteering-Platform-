@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}NGO Profile{% endblock %}
+{% block content %}
+  <h1>{{ ngo.username }}'s NGO Profile</h1>
+  <p><strong>Email:</strong> {{ ngo.email }}</p>
+  <p><strong>Focus:</strong> {{ ngo.skills|default:'Not set' }}</p>
+  {% if user.is_authenticated and user.id != ngo.id and user.role == 'volunteer' %}
+    <a class="btn" href="{% url 'report_user' ngo.id %}">Report NGO</a>
+  {% endif %}
+  <h2>Opportunities Posted</h2>
+  {% if opportunities %}
+    {% for opp in opportunities %}
+      <div class="opportunity-card">
+        <h3>{{ opp.title }}</h3>
+        <p>{{ opp.description }}</p>
+        <p><strong>Location:</strong> {{ opp.location }}</p>
+        <p><strong>Dates:</strong> {{ opp.start_date }} to {{ opp.end_date }}</p>
+        <p><strong>Skills Required:</strong> {{ opp.skills_required }}</p>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No opportunities posted yet.</p>
+  {% endif %}
+{% endblock %}

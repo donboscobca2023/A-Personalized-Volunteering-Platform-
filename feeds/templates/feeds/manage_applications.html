@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Manage Applications{% endblock %}
+{% block content %}
+<h2>Applications for: {{ opportunity.title }}</h2>
+{% for app in applications %}
+  <div class="application-card">
+    <p><strong>Volunteer:</strong> <a href="{% url 'user_profile' app.volunteer.id %}">{{ app.volunteer.username }}</a></p>
+    <p><strong>Skills:</strong> {{ app.volunteer.skills|default:'Not set' }}</p>
+    <p><strong>Status:</strong> {{ app.get_status_display }}</p>
+    <p><strong>Applied at:</strong> {{ app.applied_at }}</p>
+    {% if app.status == 'pending' %}
+      <form method="post" style="display:inline;">
+        {% csrf_token %}
+        <input type="hidden" name="app_id" value="{{ app.id }}">
+        <button class="btn" type="submit" name="action" value="approve">Approve</button>
+        <button class="btn" type="submit" name="action" value="reject">Reject</button>
+      </form>
+      <a class="btn" href="{% url 'mark_application_completed' app.id %}">Mark as Completed</a>
+    {% elif app.status == 'approved' %}
+      <a class="btn" href="{% url 'mark_application_completed' app.id %}">Mark as Completed</a>
+    {% elif app.status == 'completed' and not app.review %}
+      <a class="btn" href="{% url 'review_application' app.id %}">Leave Review</a>
+    {% elif app.status == 'completed' and app.review %}
+      <span>Reviewed</span>
+    {% endif %}
+  </div>
+{% empty %}
+  <p>No applications yet.</p>
+{% endfor %}
+<a class="btn" href="{% url 'ngo_opportunities' %}">Back to My Opportunities</a>
+{% endblock %}

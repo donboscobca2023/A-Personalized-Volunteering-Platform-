@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}NGO Dashboard{% endblock %}
+{% block content %}
+  <h1>Welcome, {{ user.username }}!</h1>
+  <p>This is your NGO dashboard.</p>
+  <a href="{% url 'create_opportunity' %}">Post New Opportunity</a>
+  <a href="{% url 'ngo_opportunities' %}">My Opportunities</a>
+  <!-- List of posted opportunities, volunteer applicants, etc. -->
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Volunteer Dashboard{% endblock %}
+{% block content %}
+  <h1>Welcome, {{ user.username }}!</h1>
+  <p><strong>Your Skills:</strong> {{ user.skills|default:'Not set' }}</p>
+  <a class="btn" href="{% url 'edit_account' %}">Edit Account Settings</a>
+  <a class="btn" href="{% url 'user_profile' user.id %}">View My Profile</a>
+  <h2>Your Applications</h2>
+  {% if applications %}
+    {% for app in applications %}
+      <div class="application-card">
+        <h3>{{ app.opportunity.title }}</h3>
+        <p><strong>NGO:</strong> {{ app.opportunity.ngo.username }}</p>
+        <p><strong>Location:</strong> {{ app.opportunity.location }}</p>
+        <p><strong>Dates:</strong> {{ app.opportunity.start_date }} to {{ app.opportunity.end_date }}</p>
+        <p><strong>Status:</strong> <span style="font-weight:600;">{{ app.get_status_display }}</span></p>
+        <p><small>Applied at {{ app.applied_at }}</small></p>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>You haven't applied to any opportunities yet.</p>
+  {% endif %}
+  <a class="btn" href="{% url 'general_feed' %}">Browse All Opportunities</a>
+{% endblock %}

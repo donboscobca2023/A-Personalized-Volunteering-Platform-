@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Report User{% endblock %}
+{% block content %}
+  <h2>Report {{ reported.username }} ({{ reported.role|title }})</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Submit Report</button>
+  </form>
+  <a class="btn" href="{% url 'user_profile' reported.id %}">Back to Profile</a>
+{% endblock %}

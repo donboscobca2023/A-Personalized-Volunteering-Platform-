@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Mark as Completed{% endblock %}
+{% block content %}
+  <h2>Mark Application as Completed</h2>
+  <div class="application-card">
+    <p><strong>Volunteer:</strong> {{ app.volunteer.username }}</p>
+    <p><strong>Opportunity:</strong> {{ app.opportunity.title }}</p>
+    <p><strong>Status:</strong> {{ app.get_status_display }}</p>
+    <form method="post">
+      {% csrf_token %}
+      <button class="btn" type="submit">Confirm</button>
+    </form>
+  </div>
+  <a class="btn" href="{% url 'manage_applications' app.opportunity.id %}">Back</a>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Opportunities Feed{% endblock %}
+
+{% block content %}
+<h2>Explore Volunteering Opportunities</h2>
+{% if user.is_authenticated and user.role == 'volunteer' %}
+  <div style="margin-bottom:1.5em;">
+    <a class="btn{% if show == 'recommended' %} active{% endif %}" href="?show=recommended">Recommended</a>
+    <a class="btn{% if show == 'new' %} active{% endif %}" href="?show=new">New</a>
+  </div>
+  {% if show == 'recommended' %}
+    {% if recommended %}
+      {% for opp in recommended %}
+        <div class="opportunity-card">
+          <h3>{{ opp.title }}</h3>
+          <p><strong>NGO:</strong> <a href="{% url 'ngo_profile' opp.ngo.id %}">{{ opp.ngo.username }}</a></p>
+          <p>{{ opp.description }}</p>
+          <p><strong>Location:</strong> {{ opp.location }}</p>
+          <p><strong>Dates:</strong> {{ opp.start_date }} to {{ opp.end_date }}</p>
+          <p><strong>Skills Required:</strong> {{ opp.skills_required }}</p>
+          {% if opp.id in user_applications %}
+            <p><em>You’ve already applied.</em></p>
+          {% else %}
+            <form action="{% url 'apply_for_opportunity' opp.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit">Apply</button>
+            </form>
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No recommended opportunities based on your skills. Try updating your skills in your account settings!</p>
+    {% endif %}
+  {% else %}
+    {% if new %}
+      {% for opp in new %}
+        <div class="opportunity-card">
+          <h3>{{ opp.title }}</h3>
+          <p><strong>NGO:</strong> <a href="{% url 'ngo_profile' opp.ngo.id %}">{{ opp.ngo.username }}</a></p>
+          <p>{{ opp.description }}</p>
+          <p><strong>Location:</strong> {{ opp.location }}</p>
+          <p><strong>Dates:</strong> {{ opp.start_date }} to {{ opp.end_date }}</p>
+          <p><strong>Skills Required:</strong> {{ opp.skills_required }}</p>
+          {% if opp.id in user_applications %}
+            <p><em>You’ve already applied.</em></p>
+          {% else %}
+            <form action="{% url 'apply_for_opportunity' opp.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit">Apply</button>
+            </form>
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No new opportunities at this time.</p>
+    {% endif %}
+  {% endif %}
+{% else %}
+  {% if new %}
+    {% for opp in new %}
+      <div class="opportunity-card">
+        <h3>{{ opp.title }}</h3>
+        <p><strong>NGO:</strong> <a href="{% url 'ngo_profile' opp.ngo.id %}">{{ opp.ngo.username }}</a></p>
+        <p>{{ opp.description }}</p>
+        <p><strong>Location:</strong> {{ opp.location }}</p>
+        <p><strong>Dates:</strong> {{ opp.start_date }} to {{ opp.end_date }}</p>
+        <p><strong>Skills Required:</strong> {{ opp.skills_required }}</p>
+        <p><small>Posted on {{ opp.created_at }}</small></p>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No opportunities posted yet.</p>
+  {% endif %}
+{% endif %}
+{% endblock %}

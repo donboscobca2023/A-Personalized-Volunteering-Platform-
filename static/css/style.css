@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+:root {
+    --main-green: #14532d;
+    --main-green-dark: #0d3a1a;
+    --main-green-light: #22c55e;
+}
+
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f6fb;
+    color: #222;
+    transition: background 0.3s, color 0.3s;
+}
+
+body.dark-mode {
+    background-color: #181a1b;
+    color: #e0e0e0;
+}
+
+header, footer {
+    background: linear-gradient(90deg, var(--main-green) 0%, var(--main-green-dark) 100%);
+    color: white;
+    padding: 0.7em 0; /* Reduced from 1.5em to 0.7em */
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: background 0.3s, color 0.3s;
+}
+body.dark-mode header, body.dark-mode footer {
+    background: linear-gradient(90deg, var(--main-green) 0%, var(--main-green-dark) 100%);
+    color: #eee;
+}
+
+nav {
+    margin-top: 0.5em;
+    font-size: 1.1em;
+}
+nav a {
+    margin: 0 16px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s, background 0.2s;
+    border-radius: 4px;
+    padding: 6px 12px;
+}
+nav a:hover {
+    color: var(--main-green-light);
+    background: rgba(255,255,255,0.08);
+}
+
+main {
+    padding: 2.5em 1em 2em 1em;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.opportunity-card, .application-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5em;
+    margin-bottom: 1.5em;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    border: 1px solid #e0e0e0;
+    transition: box-shadow 0.2s, background 0.3s, color 0.3s;
+    min-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+}
+@media (min-width: 700px) {
+  .opportunity-card, .application-card {
+    min-width: 900px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+body.dark-mode .opportunity-card, body.dark-mode .application-card {
+    background: #23272b;
+    color: #e0e0e0;
+    border: 1px solid #333;
+}
+.opportunity-card:hover, .application-card:hover {
+    box-shadow: 0 8px 32px rgba(20,83,45,0.10);
+}
+
+button, .btn {
+    background: linear-gradient(90deg, var(--main-green) 0%, var(--main-green-dark) 100%);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 0.2em 0.2em 0.2em 0;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(20,83,45,0.07);
+    text-decoration: none;
+}
+button:hover, .btn:hover {
+    background: var(--main-green-dark);
+}
+body.dark-mode button, body.dark-mode .btn {
+    background: linear-gradient(90deg, var(--main-green) 0%, var(--main-green-dark) 100%);
+    color: #fff;
+}
+body.dark-mode button:hover, body.dark-mode .btn:hover {
+    background: var(--main-green-dark);
+}
+
+form {
+    margin-bottom: 1.5em;
+}
+input, select, textarea {
+    font-family: inherit;
+    font-size: 1em;
+    padding: 0.5em;
+    border-radius: 5px;
+    border: 1px solid #bdbdbd;
+    margin-bottom: 1em;
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    color: #222;
+    transition: background 0.3s, color 0.3s;
+}
+body.dark-mode input, body.dark-mode select, body.dark-mode textarea {
+    background: #23272b;
+    color: #e0e0e0;
+    border: 1px solid #444;
+}
+input[type="date"] {
+    padding: 0.4em;
+}
+
+h1, h2, h3 {
+    font-weight: 600;
+    color: var(--main-green);
+    margin-top: 0.5em;
+    transition: color 0.3s;
+}
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
+    color: var(--main-green-light);
+}
+
+@media (max-width: 600px) {
+    main {
+        padding: 1em 0.2em;
+    }
+    .opportunity-card, .application-card {
+        padding: 1em;
+    }
+    nav a {
+        margin: 0 6px;
+        padding: 6px 6px;
+    }
+}

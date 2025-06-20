@@ -1,0 +1,86 @@
+{% load static %}
+{% load bg_images %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Volunteering Platform{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+      .container { max-width: 900px; margin: 0 auto; padding: 2em 1em; }
+      .logo { font-size: 2.2em; font-weight: 700; letter-spacing: 1px; }
+      .nav-actions { float: right; }
+      @media (max-width: 600px) {
+        .container { padding: 1em 0.5em; }
+        .logo { font-size: 1.3em; }
+        nav a { margin: 0 8px; }
+      }
+      html, body { height: 100%; }
+      body { min-height: 100vh; display: flex; flex-direction: column; }
+      main.container { flex: 1 0 auto; }
+      footer { flex-shrink: 0; }
+      .dark-toggle-btn { float: right; margin-left: 1em; background: #222; color: #fff; border: none; border-radius: 5px; padding: 0.4em 1em; cursor: pointer; font-size: 1em; }
+      .dark-toggle-btn:hover { background: #444; }
+      body.bg-random {
+        background-size: cover;
+        background-position: center;
+        /*background-repeat: no-repeat;*/
+        transition: background-image 0.7s;
+      }
+      body.dark-mode.bg-random {
+        filter: brightness(0.7);
+      }
+    </style>
+    <script>
+      function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+      }
+      // Set random background from static/img using Django template tag
+      window.onload = function() {
+        var bg = '{% random_bg_image as bgimg %}{% if bgimg %}'+ '{% static bgimg %}' +'{% endif %}';
+        if (bg && bg !== '{% static "" %}') {
+          document.body.classList.add('bg-random');
+          document.body.style.backgroundImage = 'url(' + bg + ')';
+        }
+        if (localStorage.getItem('darkMode') === 'true') {
+          document.body.classList.add('dark-mode');
+        }
+      }
+    </script>
+</head>
+<body>
+    <header>
+      <div class="container">
+        <span class="logo"><a href="/" style="color:white;text-decoration:none;">Volunteering Platform</a></span>
+        <button class="dark-toggle-btn" onclick="toggleDarkMode()">🌙</button>
+        <nav class="nav-actions">
+          <a href="{% url 'general_feed' %}">Feed</a>
+          {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Logout</a>
+            {% if user.role == 'volunteer' %}
+              <a href="{% url 'volunteer_dashboard' %}">Dashboard</a>
+            {% elif user.role == 'ngo' %}
+              <a href="{% url 'ngo_dashboard' %}">Dashboard</a>
+            {% elif user.role == 'admin' %}
+              <a href="/admin/">Admin Panel</a>
+            {% endif %}
+          {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+          {% endif %}
+        </nav>
+        <div style="clear:both;"></div>
+      </div>
+    </header>
+    <main class="container">
+      {% block content %}{% endblock %}
+    </main>
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 Volunteering Platform</p>
+      </div>
+    </footer>
+</body>
+</html>

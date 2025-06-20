@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Edit Account{% endblock %}
+{% block content %}
+  <h1>Edit Account Settings</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <small>List your skills separated by commas. These will help us match you to the best opportunities!</small>
+    <button class="btn" type="submit">Save Changes</button>
+  </form>
+  <a href="{% url 'volunteer_dashboard' %}" class="btn">Back to Dashboard</a>
+{% endblock %}

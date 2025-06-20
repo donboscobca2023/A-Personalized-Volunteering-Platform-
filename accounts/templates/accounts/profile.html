@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Volunteer Profile{% endblock %}
+{% block content %}
+  <h1>{{ profile_user.username }}'s Profile</h1>
+  <p><strong>Role:</strong> {{ profile_user.role|title }}</p>
+  <p><strong>Skills:</strong> {{ profile_user.skills|default:'Not set' }}</p>
+  {% if avg_rating %}
+    <p><strong>Average Rating:</strong> {{ avg_rating|floatformat:1 }}/5</p>
+  {% endif %}
+  {% if user.is_authenticated and user.id != profile_user.id %}
+    {% if user.role == 'volunteer' and profile_user.role == 'ngo' %}
+      <a class="btn" href="{% url 'report_user' profile_user.id %}">Report NGO</a>
+    {% elif user.role == 'ngo' and profile_user.role == 'volunteer' %}
+      <a class="btn" href="{% url 'report_user' profile_user.id %}">Report Volunteer</a>
+    {% endif %}
+  {% endif %}
+  <h2>Completed Opportunities</h2>
+  {% if applications %}
+    {% for app in applications %}
+      <div class="application-card">
+        <h3>{{ app.opportunity.title }}</h3>
+        <p><strong>NGO:</strong> {{ app.opportunity.ngo.username }}</p>
+        <p><strong>Dates:</strong> {{ app.opportunity.start_date }} to {{ app.opportunity.end_date }}</p>
+        <p><strong>Status:</strong> {{ app.get_status_display }}</p>
+        <p><strong>Completed at:</strong> {{ app.completed_at }}</p>
+        {% if app.review %}
+          <p><strong>Review:</strong> {{ app.review }}</p>
+          <p><strong>Rating:</strong> {{ app.review_rating }}/5</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No completed opportunities yet.</p>
+  {% endif %}
+  <h2>Reviews</h2>
+  {% if reviews %}
+    {% for app in reviews %}
+      <div class="application-card">
+        <p><strong>Opportunity:</strong> {{ app.opportunity.title }}</p>
+        <p><strong>Review:</strong> {{ app.review }}</p>
+        <p><strong>Rating:</strong> {{ app.review_rating }}/5</p>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No reviews yet.</p>
+  {% endif %}
+{% endblock %}

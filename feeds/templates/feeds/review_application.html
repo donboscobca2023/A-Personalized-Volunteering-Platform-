@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Review Volunteer{% endblock %}
+{% block content %}
+  <h2>Leave a Review for {{ app.volunteer.username }}</h2>
+  <div class="application-card">
+    <p><strong>Opportunity:</strong> {{ app.opportunity.title }}</p>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn" type="submit">Submit Review</button>
+    </form>
+  </div>
+  <a class="btn" href="{% url 'manage_applications' app.opportunity.id %}">Back</a>
+{% endblock %}
