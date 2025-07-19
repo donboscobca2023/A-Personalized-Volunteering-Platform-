@@ -16,6 +16,7 @@ class RegistrationForm(UserCreationForm):
     ROLE_CHOICES = (
         ("volunteer", "Volunteer"),
         ("ngo", "NGO"),
+        ("admin", "Admin"),
     )
     role = forms.ChoiceField(choices=ROLE_CHOICES)
     skills = forms.CharField(
@@ -28,6 +29,13 @@ class RegistrationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ["username", "email", "role", "skills", "password1", "password2"]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        role = cleaned_data.get("role")
+        if role != "volunteer":
+            cleaned_data["skills"] = ""
+        return cleaned_data
 
 
 class EditAccountForm(forms.ModelForm):

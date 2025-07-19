@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+  <h2>Admin Dashboard: Reports</h2>
+  <h3>Pending Admin Approvals</h3>
+  {% if pending_admins %}
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Approve</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for admin in pending_admins %}
+        <tr>
+          <td>{{ admin.username }}</td>
+          <td>{{ admin.email }}</td>
+          <td>
+            <form method="post" style="display:inline;">
+              {% csrf_token %}
+              <input type="hidden" name="approve_admin_id" value="{{ admin.id }}">
+              <button type="submit">Approve</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No pending admin approvals.</p>
+  {% endif %}
+  <hr>
+  <h3>User Reports</h3>
+  {% if reports %}
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Reporter</th>
+          <th>Reported</th>
+          <th>Type</th>
+          <th>Reason</th>
+          <th>Created</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for report in reports %}
+        <tr>
+          <td>{{ report.id }}</td>
+          <td>{{ report.reporter }}</td>
+          <td>{{ report.reported }}</td>
+          <td>{{ report.report_type }}</td>
+          <td>{{ report.reason }}</td>
+          <td>{{ report.created_at }}</td>
+          <td>{% if report.handled %}Resolved{% else %}Open{% endif %}</td>
+          <td>
+            {% if not report.handled %}
+              <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="report_id" value="{{ report.id }}">
+                <textarea name="resolution" rows="2" placeholder="Resolution..." required></textarea>
+                <button type="submit">Resolve</button>
+              </form>
+            {% else %}
+              <span>{{ report.resolution }}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No reports found.</p>
+  {% endif %}
+{% endblock %}

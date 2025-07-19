@@ -13,6 +13,13 @@
     {% elif user.role == 'ngo' and profile_user.role == 'volunteer' %}
       <a class="btn" href="{% url 'report_user' profile_user.id %}">Report Volunteer</a>
     {% endif %}
+    {% if user.role == 'admin' and profile_user.role in 'volunteer ngo' %}
+      <form method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
+        {% csrf_token %}
+        <input type="hidden" name="delete_user_id" value="{{ profile_user.id }}">
+        <button type="submit" class="btn" style="color:red;">Delete User</button>
+      </form>
+    {% endif %}
   {% endif %}
   <h2>Completed Opportunities</h2>
   {% if applications %}

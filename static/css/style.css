@@ -147,6 +147,24 @@ body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
     color: var(--main-green-light);
 }
 
+.form-error {
+    color: red;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.errorlist {
+    color: red;
+    text-decoration: underline;
+    font-weight: 600;
+    list-style: none;
+    padding-left: 0;
+    margin: 0 0 0.5em 0;
+}
+.errorlist li {
+    margin: 0;
+}
+
 @media (max-width: 600px) {
     main {
         padding: 1em 0.2em;

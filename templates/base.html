@@ -64,7 +64,7 @@
             {% elif user.role == 'ngo' %}
               <a href="{% url 'ngo_dashboard' %}">Dashboard</a>
             {% elif user.role == 'admin' %}
-              <a href="/admin/">Admin Panel</a>
+              <a href="{% url 'admin_dashboard' %}">Dashboard</a>
             {% endif %}
           {% else %}
             <a href="{% url 'login' %}">Login</a>

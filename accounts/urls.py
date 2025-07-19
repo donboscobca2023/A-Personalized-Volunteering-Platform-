@@ -12,4 +12,5 @@ urlpatterns = [
     path("profile/<int:user_id>/", views.user_profile, name="user_profile"),
     path("ngo_profile/<int:user_id>/", views.ngo_profile, name="ngo_profile"),
     path("report/<int:user_id>/", views.report_user, name="report_user"),
+    path("admin_dashboard/", views.admin_dashboard, name="admin_dashboard"),
 ]
