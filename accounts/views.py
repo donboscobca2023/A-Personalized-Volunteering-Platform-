@@ -1,13 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
+from django.http import HttpResponse
 from .forms import LoginForm, RegistrationForm, EditAccountForm, ReviewForm, ReportForm
 from feeds.models import Application, Opportunity
 from .models import Report
-from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.db.models import Avg
-from django.views.decorators.http import require_http_methods
+import datetime
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import landscape, letter
+from reportlab.lib.units import inch
+from reportlab.lib.colors import HexColor
+from reportlab.lib.utils import ImageReader
 
 
 def index(request):
@@ -83,7 +89,9 @@ def volunteer_dashboard(request):
 def ngo_dashboard(request):
     if request.user.role != "ngo":
         return redirect("home")
-    return render(request, "accounts/ngo_dashboard.html")
+    # Get all opportunities posted by this NGO
+    opportunities = Opportunity.objects.filter(ngo=request.user).order_by("-created_at")
+    return render(request, "accounts/ngo_dashboard.html", {"opportunities": opportunities})
 
 
 @login_required
@@ -176,6 +184,13 @@ def admin_dashboard(request):
                 admin_user.save()
             except User.DoesNotExist:
                 pass
+        elif "reject_admin_id" in request.POST:
+            admin_id = request.POST.get("reject_admin_id")
+            try:
+                admin_user = User.objects.get(id=admin_id, role="admin", is_active=False)
+                admin_user.delete()
+            except User.DoesNotExist:
+                pass
         elif "delete_user_id" in request.POST:
             user_id = request.POST.get("delete_user_id")
             try:
@@ -188,3 +203,64 @@ def admin_dashboard(request):
     pending_admins = User.objects.filter(role="admin", is_active=False)
     users_to_manage = User.objects.filter(role__in=["volunteer", "ngo"]).order_by("role", "username")
     return render(request, "accounts/admin_dashboard.html", {"reports": reports, "pending_admins": pending_admins, "users_to_manage": users_to_manage})
+
+
+@login_required
+def download_certificate(request, app_id):
+    app = get_object_or_404(Application, id=app_id, volunteer=request.user, status="completed")
+    volunteer_name = request.user.username
+    center_name = app.opportunity.ngo.username if hasattr(app.opportunity.ngo, 'username') else str(app.opportunity.ngo)
+    event_name = app.opportunity.title
+    event_date = app.completed_at if app.completed_at else app.opportunity.end_date
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="certificate_{volunteer_name}_{event_name}.pdf"'
+
+    p = canvas.Canvas(response, pagesize=landscape(letter))
+    width, height = landscape(letter)
+
+    bg_path = "static/img/volunteers-601662_1920.jpg"
+    try:
+        bg = ImageReader(bg_path)
+        p.drawImage(bg, 0, 0, width, height, mask='auto')
+    except Exception:
+        p.setFillColor(HexColor("#f4f6fb"))
+        p.rect(0, 0, width, height, fill=1, stroke=0)
+        p.setFillColor(HexColor("#22c55e"))
+        p.rect(0, height-1.5*inch, width, 1.5*inch, fill=1, stroke=0)
+
+    # Border
+    p.setStrokeColor(HexColor("#14532d"))
+    p.setLineWidth(6)
+    p.rect(0.5*inch, 0.5*inch, width-1*inch, height-1*inch, fill=0)
+
+    # Title
+    p.setFont("Helvetica-Bold", 38)
+    p.setFillColor(HexColor("#14532d"))
+    p.drawCentredString(width / 2, height - 1.1*inch, "Certificate of Participation")
+
+    # Decorative line
+    p.setStrokeColor(HexColor("#22c55e"))
+    p.setLineWidth(3)
+    p.line(width/2 - 3*inch, height - 1.35*inch, width/2 + 3*inch, height - 1.35*inch)
+
+    # Subtitle
+    p.setFont("Helvetica", 22)
+    p.setFillColor(HexColor("#222222"))
+    p.drawCentredString(width / 2, height - 2.1*inch, f"This certifies that")
+
+    # Volunteer Name
+    p.setFont("Helvetica-Bold", 30)
+    p.setFillColor(HexColor("#0d3a1a"))
+    p.drawCentredString(width / 2, height - 2.8*inch, volunteer_name)
+
+    # Event and Center
+    p.setFont("Helvetica", 22)
+    p.setFillColor(HexColor("#222222"))
+    p.drawCentredString(width / 2, height - 3.6*inch, f"volunteered for {event_name}")
+    p.drawCentredString(width / 2, height - 4.2*inch, f"by {center_name}")
+    p.drawCentredString(width / 2, height - 4.8*inch, f"on {event_date.strftime('%B %d, %Y') if hasattr(event_date, 'strftime') else event_date}")
+
+    p.showPage()
+    p.save()
+    return response

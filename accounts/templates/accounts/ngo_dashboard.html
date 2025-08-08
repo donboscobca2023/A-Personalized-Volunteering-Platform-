@@ -3,7 +3,21 @@
 {% block content %}
   <h1>Welcome, {{ user.username }}!</h1>
   <p>This is your NGO dashboard.</p>
-  <a href="{% url 'create_opportunity' %}">Post New Opportunity</a>
-  <a href="{% url 'ngo_opportunities' %}">My Opportunities</a>
-  <!-- List of posted opportunities, volunteer applicants, etc. -->
+  <a class="btn" href="{% url 'create_opportunity' %}">+ Post New Opportunity</a>
+  <h2>Your Posted Opportunities</h2>
+  {% if opportunities %}
+    {% for opportunity in opportunities %}
+      <div class="opportunity-card">
+        <h3>{{ opportunity.title }}</h3>
+        <p><strong>Location:</strong> {{ opportunity.location }}</p>
+        <p><strong>Dates:</strong> {{ opportunity.start_date }} to {{ opportunity.end_date }}</p>
+        <p>{{ opportunity.description }}</p>
+        <p><strong>Skills:</strong> {{ opportunity.skills_required }}</p>
+        <a class="btn" href="{% url 'manage_applications' opportunity.id %}">Manage Applications</a>
+        <a class="btn" href="{% url 'edit_opportunity' opportunity.id %}">Edit</a>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>You haven’t posted any opportunities yet.</p>
+  {% endif %}
 {% endblock %}
