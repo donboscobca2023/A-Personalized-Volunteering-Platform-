@@ -7,13 +7,12 @@ from .forms import LoginForm, RegistrationForm, EditAccountForm, ReviewForm, Rep
 from feeds.models import Application, Opportunity
 from .models import Report
 from django.utils import timezone
-from django.db.models import Avg
-import datetime
-from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import landscape, letter
 from reportlab.lib.units import inch
 from reportlab.lib.colors import HexColor
 from reportlab.lib.utils import ImageReader
+from reportlab.pdfgen import canvas
+from django.db.models import Avg
 
 
 def index(request):
@@ -206,6 +205,19 @@ def admin_dashboard(request):
 
 
 @login_required
+def notifications(request):
+    applications = []
+    reports = []
+    if request.user.role == "ngo":
+        # Show applications for this NGO's opportunities that are not completed
+        applications = Application.objects.filter(opportunity__ngo=request.user).exclude(status="completed").select_related("volunteer", "opportunity")
+    if request.user.role == "admin":
+        # Show all unhandled reports
+        reports = Report.objects.filter(handled=False).select_related("reporter", "reported")
+    return render(request, "accounts/notifications.html", {"applications": applications, "reports": reports})
+
+
+@login_required
 def download_certificate(request, app_id):
     app = get_object_or_404(Application, id=app_id, volunteer=request.user, status="completed")
     volunteer_name = request.user.username
@@ -264,3 +276,17 @@ def download_certificate(request, app_id):
     p.showPage()
     p.save()
     return response
+
+
+def get_notification_count(request):
+    if not request.user.is_authenticated:
+        return {'notification_count': 0}
+    count = 0
+    if hasattr(request.user, 'role'):
+        if request.user.role == 'ngo':
+            from feeds.models import Application
+            count = Application.objects.filter(opportunity__ngo=request.user, status='pending').count()
+        elif request.user.role == 'admin':
+            from .models import Report
+            count = Report.objects.filter(handled=False).count()
+    return {'notification_count': count}

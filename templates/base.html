@@ -9,8 +9,35 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
       .container { max-width: 900px; margin: 0 auto; padding: 2em 1em; }
-      .logo { font-size: 2.2em; font-weight: 700; letter-spacing: 1px; }
-      .nav-actions { float: right; }
+      .header-flex {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 48px;
+      }
+      .logo {
+        font-size: 2em;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-right: 0.7em;
+      }
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 0;
+        float: none;
+      }
+      .nav-actions a, .nav-actions .notification-bell {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: white;
+        font-size: 0.95em;
+        font-weight: 500;
+        height: 32px;
+        padding: 0 6px;
+      }
       @media (max-width: 600px) {
         .container { padding: 1em 0.5em; }
         .logo { font-size: 1.3em; }
@@ -20,7 +47,19 @@
       body { min-height: 100vh; display: flex; flex-direction: column; }
       main.container { flex: 1 0 auto; }
       footer { flex-shrink: 0; }
-      .dark-toggle-btn { float: right; margin-left: 1em; background: #222; color: #fff; border: none; border-radius: 5px; padding: 0.4em 1em; cursor: pointer; font-size: 1em; }
+      .dark-toggle-btn {
+        background: #222;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 0.3em 0.7em;
+        cursor: pointer;
+        font-size: 0.95em;
+        margin-left: 0.3em;
+        height: 32px;
+        display: flex;
+        align-items: center;
+      }
       .dark-toggle-btn:hover { background: #444; }
       body.bg-random {
         background-size: cover;
@@ -31,19 +70,32 @@
       body.dark-mode.bg-random {
         filter: brightness(0.7);
       }
+      .bell-svg {
+        /* Remove color and stroke inheritance to ensure visibility */
+      }
+      @media (max-width: 600px) {
+        .nav-actions {
+          gap: 10px;
+          font-size: 0.95em;
+        }
+        .notification-bell svg {
+          height: 22px;
+          width: 22px;
+        }
+      }
     </style>
     <script>
       function toggleDarkMode() {
         document.body.classList.toggle('dark-mode');
         localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
       }
-      // Set random background from static/img using Django template tag
       window.onload = function() {
-        var bg = '{% random_bg_image as bgimg %}{% if bgimg %}'+ '{% static bgimg %}' +'{% endif %}';
-        if (bg && bg !== '{% static "" %}') {
-          document.body.classList.add('bg-random');
-          document.body.style.backgroundImage = 'url(' + bg + ')';
-        }
+        // Random background disabled
+        // var bg = '{% random_bg_image as bgimg %}{% if bgimg %}'+ '{% static bgimg %}' +'{% endif %}';
+        // if (bg && bg !== '{% static "" %}') {
+        //   document.body.classList.add('bg-random');
+        //   document.body.style.backgroundImage = 'url(' + bg + ')';
+        // }
         if (localStorage.getItem('darkMode') === 'true') {
           document.body.classList.add('dark-mode');
         }
@@ -52,9 +104,8 @@
 </head>
 <body>
     <header>
-      <div class="container">
+      <div class="container header-flex">
         <span class="logo"><a href="/" style="color:white;text-decoration:none;">Volunteering Platform</a></span>
-        <button class="dark-toggle-btn" onclick="toggleDarkMode()">🌙</button>
         <nav class="nav-actions">
           <a href="{% url 'general_feed' %}">Feed</a>
           {% if user.is_authenticated %}
@@ -66,12 +117,18 @@
             {% elif user.role == 'admin' %}
               <a href="{% url 'admin_dashboard' %}">Dashboard</a>
             {% endif %}
+            <span class="notification-bell">
+              <a href="{% url 'notifications' %}" style="text-decoration:none;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="{% if notification_count and notification_count > 0 %}red{% else %}white{% endif %}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              </a>
+            </span>
+            <button class="dark-toggle-btn" onclick="toggleDarkMode()">🌙</button>
           {% else %}
             <a href="{% url 'login' %}">Login</a>
             <a href="{% url 'register' %}">Register</a>
+            <button class="dark-toggle-btn" onclick="toggleDarkMode()">🌙</button>
           {% endif %}
         </nav>
-        <div style="clear:both;"></div>
       </div>
     </header>
     <main class="container">

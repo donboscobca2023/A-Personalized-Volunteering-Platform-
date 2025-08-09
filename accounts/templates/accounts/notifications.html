@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Notifications{% endblock %}
+{% block content %}
+  <h2>Notifications</h2>
+  {% if applications or reports %}
+    <ul>
+      {% for app in applications %}
+        <li>
+          <strong>Application:</strong> {{ app.volunteer.username }} applied for <em>{{ app.opportunity.title }}</em> (Status: {{ app.status }})
+          {% if app.status == 'pending' %}
+            <a href="{% url 'ngo_dashboard' %}" class="handle-btn">Handle</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+      {% for report in reports %}
+        <li>
+          <strong>Report:</strong> {{ report.reporter.username }} reported {{ report.reported.username }} (Type: {{ report.report_type }})
+          {% if not report.handled %}
+            <a href="{% url 'admin_dashboard' %}" class="handle-btn">Handle</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No notifications at this time.</p>
+  {% endif %}
+  <style>
+.handle-btn {
+  display: inline-block;
+  margin-left: 12px;
+  padding: 2px 12px;
+  background: #e11d48;
+  color: #fff;
+  border-radius: 4px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.handle-btn:hover {
+  background: #be123c;
+}
+</style>
+{% endblock %}

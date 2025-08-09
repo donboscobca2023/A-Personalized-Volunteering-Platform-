@@ -165,6 +165,65 @@ body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
     margin: 0;
 }
 
+.header-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+}
+.logo {
+  font-size: 2.2em;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-right: 1.5em;
+}
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 0;
+  float: none;
+}
+.nav-actions a, .nav-actions .notification-bell {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  font-size: 1em;
+  font-weight: 500;
+  height: 32px;
+}
+.notification-bell {
+  position: relative;
+  margin-left: 0;
+  padding: 0;
+  height: 32px;
+}
+.notification-bell svg {
+  vertical-align: middle;
+  color: inherit;
+  height: 28px;
+  width: 28px;
+  display: block;
+}
+.bell-svg {
+  color: red !important;
+  stroke: red !important;
+}
+.dark-toggle-btn {
+  float: right;
+  margin-left: 1em;
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.4em 1em;
+  cursor: pointer;
+  font-size: 1em;
+}
+.dark-toggle-btn:hover {
+  background: #444;
+}
 @media (max-width: 600px) {
     main {
         padding: 1em 0.2em;
@@ -176,4 +235,7 @@ body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
         margin: 0 6px;
         padding: 6px 6px;
     }
+    .header-flex .logo { font-size: 1.3em; }
+    .nav-actions { gap: 10px; font-size: 0.95em; }
+    .notification-bell svg { height: 22px; width: 22px; }
 }

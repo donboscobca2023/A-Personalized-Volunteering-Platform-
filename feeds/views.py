@@ -5,6 +5,7 @@ from .forms import OpportunityForm
 from django.shortcuts import redirect, get_object_or_404
 from django.db.models import Q
 from django.utils import timezone
+from accounts.forms import ReviewForm
 
 
 def general_feed(request):
@@ -145,7 +146,6 @@ def review_application(request, app_id):
     app = get_object_or_404(Application, id=app_id)
     if request.user != app.opportunity.ngo or app.status != "completed":
         return render(request, "403.html")
-    from accounts.forms import ReviewForm
     if request.method == "POST":
         form = ReviewForm(request.POST, instance=app)
         if form.is_valid():

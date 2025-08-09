@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Notifications{% endblock %}
+{% block content %}
+  <h2>Notifications</h2>
+  {% if applications or reports %}
+    <ul>
+      {% for app in applications %}
+        <li>
+          <strong>Application:</strong> {{ app.volunteer.username }} applied for <em>{{ app.opportunity.title }}</em> (Status: {{ app.status }})
+          {% if app.status != 'completed' %}
+            <span style="color:red;font-weight:bold;">Unhandled</span>
+          {% endif %}
+        </li>
+      {% endfor %}
+      {% for report in reports %}
+        <li>
+          <strong>Report:</strong> {{ report.reporter.username }} reported {{ report.reported.username }} (Type: {{ report.report_type }})
+          {% if not report.handled %}
+            <span style="color:red;font-weight:bold;">Unhandled</span>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No notifications at this time.</p>
+  {% endif %}
+{% endblock %}
