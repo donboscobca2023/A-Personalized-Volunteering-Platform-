@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Welcome to Volunteering Platform{% endblock %}
+{% block content %}
+<section class="welcome-section">
+  <h1>Welcome to the Volunteering Platform</h1>
+  <p class="lead">Connect. Contribute. Make a Difference.</p>
+  <div class="home-actions">
+    <a href="{% url 'register' %}" class="btn">Get Started</a>
+    <a href="{% url 'general_feed' %}" class="btn btn-outline">Explore Opportunities</a>
+  </div>
+</section>
+
+<style>
+.welcome-section {
+  text-align: center;
+  margin: 4em auto;
+  max-width: 650px;
+  padding: 2em;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  transition: background 0.3s, color 0.3s;
+}
+
+.welcome-section h1 {
+  font-size: 2.2em;
+  font-weight: 700;
+  color: var(--main-green);
+  margin-bottom: 0.5em;
+  transition: color 0.3s;
+}
+
+.welcome-section .lead {
+  font-size: 1.25em;
+  margin-bottom: 2em;
+  color: #444;
+  transition: color 0.3s;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--main-green);
+  border: 2px solid var(--main-green-light);
+  transition: background 0.3s, color 0.3s;
+}
+
+.btn-outline:hover {
+  background: var(--main-green-light);
+  color: white;
+}
+
+/* Dark mode support */
+body.dark-mode .welcome-section {
+  background: #23272b;
+  color: #e0e0e0;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+body.dark-mode .welcome-section h1 {
+  color: var(--main-green-light);
+}
+
+body.dark-mode .welcome-section .lead {
+  color: #ccc;
+}
+
+body.dark-mode .btn-outline {
+  color: var(--main-green-light);
+  border-color: var(--main-green-light);
+}
+
+body.dark-mode .btn-outline:hover {
+  background: var(--main-green-light);
+  color: #fff;
+}
+
+@media (max-width: 700px) {
+  .welcome-section {
+    margin: 2em auto;
+    padding: 1.5em;
+  }
+  .welcome-section h1 {
+    font-size: 1.8em;
+  }
+}
+</style>
+{% endblock %}

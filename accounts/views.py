@@ -16,7 +16,7 @@ from django.db.models import Avg
 
 
 def index(request):
-    return render(request, "index.html")
+    return render(request, "home.html")
 
 
 def user_login(request):

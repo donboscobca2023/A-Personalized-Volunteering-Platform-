@@ -10,20 +10,24 @@ body {
     font-family: 'Inter', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f6fb;
+    //background-color: #f4f6fb;
+    background: linear-gradient(180deg, #f2f7f3 0%, #d9e7df 100%);
+    background-attachment: fixed;
     color: #222;
     transition: background 0.3s, color 0.3s;
 }
 
 body.dark-mode {
-    background-color: #181a1b;
+    //background-color: #181a1b;
+    background: linear-gradient(180deg, #1a1f1b 0%, #0c100d 100%);
+    background-attachment: fixed;
     color: #e0e0e0;
 }
 
 header, footer {
     background: linear-gradient(90deg, var(--main-green) 0%, var(--main-green-dark) 100%);
     color: white;
-    padding: 0.7em 0; /* Reduced from 1.5em to 0.7em */
+    padding: 0.7em 0;
     text-align: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     transition: background 0.3s, color 0.3s;
@@ -238,4 +242,29 @@ body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
     .header-flex .logo { font-size: 1.3em; }
     .nav-actions { gap: 10px; font-size: 0.95em; }
     .notification-bell svg { height: 22px; width: 22px; }
+}
+
+header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: all 0.25s ease;
+    z-index: 1000;
+}
+
+header.shrink .header-flex {
+    min-height: 36px; /* smaller height when scrolling */
+    padding: 0.2em 0;
+    transition: padding 0.25s ease, min-height 0.25s ease;
+}
+
+header.shrink .logo {
+    font-size: 1.4em; /* reduce logo text size */
+    transition: font-size 0.25s ease;
+}
+
+main.container {
+    padding-top: 70px; /* offset for fixed header height */
 }

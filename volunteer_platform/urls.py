@@ -17,11 +17,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from feeds.views import general_feed
+from accounts.views import index
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
-    path("", general_feed, name="home"),
+    path("", index, name="home"),
     path("feeds/", include("feeds.urls")),
 ]
