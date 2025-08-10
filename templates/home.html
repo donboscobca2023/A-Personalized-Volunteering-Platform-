@@ -2,87 +2,63 @@
 {% load static %}
 {% block title %}Welcome to Volunteering Platform{% endblock %}
 {% block content %}
-<section class="welcome-section">
-  <h1>Welcome to the Volunteering Platform</h1>
-  <p class="lead">Connect. Contribute. Make a Difference.</p>
-  <div class="home-actions">
-    <a href="{% url 'register' %}" class="btn">Get Started</a>
-    <a href="{% url 'general_feed' %}" class="btn btn-outline">Explore Opportunities</a>
+<!-- Welcome Section with Background Image and Overlay -->
+<section class="welcome-section" style="position:relative; min-height: 420px; display:flex; align-items:center; justify-content:center; background: linear-gradient(120deg, rgba(34,197,94,0.13) 0%, rgba(20,83,45,0.18) 100%), url('{% static 'img/volunteers-601662_1920.jpg' %}') center/cover no-repeat; border-radius: 18px; margin: 2.5em auto 2em auto; max-width: 1100px; box-shadow: 0 8px 32px rgba(20,83,45,0.10);">
+  <div class="welcome-content" style="background: rgba(255,255,255,0.88); border-radius: 14px; padding: 2.5em 2em; max-width: 600px; margin: 2em; box-shadow: 0 2px 12px rgba(20,83,45,0.07); text-align:center;">
+    <h1 style="font-size:2.5em; font-weight:800; color: var(--main-green); margin-bottom:0.4em;">Empower Change. <span style="color:var(--main-green-light);">Volunteer</span> Today!</h1>
+    <p class="lead" style="font-size:1.3em; color:#333; margin-bottom:1.7em;">A personalized platform connecting passionate volunteers with impactful opportunities.</p>
+    <div class="home-actions">
+      <a href="{% url 'register' %}" class="btn" style="font-size:1.1em;">Get Started</a>
+      <a href="{% url 'general_feed' %}" class="btn btn-outline" style="font-size:1.1em;">Explore Opportunities</a>
+    </div>
   </div>
 </section>
 
-<style>
-.welcome-section {
-  text-align: center;
-  margin: 4em auto;
-  max-width: 650px;
-  padding: 2em;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
-  transition: background 0.3s, color 0.3s;
-}
+<!-- About the Project Section -->
+<section class="about-section" style="max-width: 900px; margin: 0 auto 2.5em auto; background: #fff; border-radius: 14px; box-shadow: 0 4px 16px rgba(20,83,45,0.08); padding: 2.2em 1.5em;">
+  <h2 style="color: var(--main-green); font-size:2em; font-weight:700; margin-bottom:0.7em; text-align:center;">About Our Platform</h2>
+  <p style="font-size:1.15em; color:#444; text-align:center; max-width:700px; margin:0 auto 1.5em auto;">The proposed system is a comprehensive, web-based volunteering portal designed to connect individuals with social impact projects that align with their skills, interests, and availability. It streamlines volunteer engagement, enables data-driven coordination for NGOs, and fosters a more structured, impactful, and rewarding volunteering ecosystem.</p>
+  <div class="about-highlights" style="display:flex; flex-wrap:wrap; justify-content:center; gap:2em; margin-top:1.5em;">
+    <div style="flex:1 1 220px; min-width:200px; max-width:260px; background:linear-gradient(120deg,#f2f7f3 60%,#d9e7df 100%); border-radius:10px; padding:1.2em 1em; text-align:center;">
+      <img src="{% static 'img/raised-hands-volunteering-and-blue-background-vector-concept.jpg' %}" alt="Connect" style="width:54px; height:54px; border-radius:50%; margin-bottom:0.7em; box-shadow:0 2px 8px #22c55e22;">
+      <h3 style="color:var(--main-green); font-size:1.15em; font-weight:600; margin-bottom:0.3em;">Personalized Matching</h3>
+      <p style="font-size:0.98em; color:#333;">Volunteers get tailored opportunities based on their skills and interests.</p>
+    </div>
+    <div style="flex:1 1 220px; min-width:200px; max-width:260px; background:linear-gradient(120deg,#f2f7f3 60%,#d9e7df 100%); border-radius:10px; padding:1.2em 1em; text-align:center;">
+      <img src="{% static 'img/Volunteers Graphic.png' %}" alt="Track" style="width:54px; height:54px; border-radius:50%; margin-bottom:0.7em; box-shadow:0 2px 8px #22c55e22;">
+      <h3 style="color:var(--main-green); font-size:1.15em; font-weight:600; margin-bottom:0.3em;">Easy Tracking</h3>
+      <p style="font-size:0.98em; color:#333;">Track your applications, participation, and receive digital certificates.</p>
+    </div>
+    <div style="flex:1 1 220px; min-width:200px; max-width:260px; background:linear-gradient(120deg,#f2f7f3 60%,#d9e7df 100%); border-radius:10px; padding:1.2em 1em; text-align:center;">
+      <img src="{% static 'img/composition-still-life-friendship-day-elements.jpg' %}" alt="NGO" style="width:54px; height:54px; border-radius:50%; margin-bottom:0.7em; box-shadow:0 2px 8px #22c55e22;">
+      <h3 style="color:var(--main-green); font-size:1.15em; font-weight:600; margin-bottom:0.3em;">NGO Tools</h3>
+      <p style="font-size:0.98em; color:#333;">NGOs can post, manage, and recognize volunteers with ease.</p>
+    </div>
+  </div>
+</section>
 
-.welcome-section h1 {
-  font-size: 2.2em;
-  font-weight: 700;
-  color: var(--main-green);
-  margin-bottom: 0.5em;
-  transition: color 0.3s;
-}
+<!-- How It Works Section -->
+<section class="how-section" style="max-width: 900px; margin: 0 auto 2.5em auto; background: linear-gradient(120deg,#f2f7f3 60%,#d9e7df 100%); border-radius: 14px; box-shadow: 0 4px 16px rgba(20,83,45,0.08); padding: 2.2em 1.5em;">
+  <h2 style="color: var(--main-green); font-size:1.7em; font-weight:700; margin-bottom:0.7em; text-align:center;">How It Works</h2>
+  <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:2em; margin-top:1.5em;">
+    <div style="flex:1 1 200px; min-width:180px; max-width:220px; text-align:center;">
+      <div style="font-size:2.2em; color:var(--main-green-light); margin-bottom:0.3em;">1️⃣</div>
+      <div style="font-weight:600; color:var(--main-green); margin-bottom:0.2em;">Sign Up</div>
+      <div style="font-size:0.98em; color:#333;">Create your profile and set your interests.</div>
+    </div>
+    <div style="flex:1 1 200px; min-width:180px; max-width:220px; text-align:center;">
+      <div style="font-size:2.2em; color:var(--main-green-light); margin-bottom:0.3em;">2️⃣</div>
+      <div style="font-weight:600; color:var(--main-green); margin-bottom:0.2em;">Discover</div>
+      <div style="font-size:0.98em; color:#333;">Browse and apply for opportunities that match you.</div>
+    </div>
+    <div style="flex:1 1 200px; min-width:180px; max-width:220px; text-align:center;">
+      <div style="font-size:2.2em; color:var(--main-green-light); margin-bottom:0.3em;">3️⃣</div>
+      <div style="font-weight:600; color:var(--main-green); margin-bottom:0.2em;">Make Impact</div>
+      <div style="font-size:0.98em; color:#333;">Volunteer, track your journey, and earn recognition!</div>
+    </div>
+  </div>
+</section>
 
-.welcome-section .lead {
-  font-size: 1.25em;
-  margin-bottom: 2em;
-  color: #444;
-  transition: color 0.3s;
-}
+<!-- Optional: Add a colorful footer or testimonial section here if desired -->
 
-.btn-outline {
-  background: transparent;
-  color: var(--main-green);
-  border: 2px solid var(--main-green-light);
-  transition: background 0.3s, color 0.3s;
-}
-
-.btn-outline:hover {
-  background: var(--main-green-light);
-  color: white;
-}
-
-/* Dark mode support */
-body.dark-mode .welcome-section {
-  background: #23272b;
-  color: #e0e0e0;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-}
-
-body.dark-mode .welcome-section h1 {
-  color: var(--main-green-light);
-}
-
-body.dark-mode .welcome-section .lead {
-  color: #ccc;
-}
-
-body.dark-mode .btn-outline {
-  color: var(--main-green-light);
-  border-color: var(--main-green-light);
-}
-
-body.dark-mode .btn-outline:hover {
-  background: var(--main-green-light);
-  color: #fff;
-}
-
-@media (max-width: 700px) {
-  .welcome-section {
-    margin: 2em auto;
-    padding: 1.5em;
-  }
-  .welcome-section h1 {
-    font-size: 1.8em;
-  }
-}
-</style>
 {% endblock %}

@@ -83,6 +83,14 @@
           width: 22px;
         }
       }
+      /* Fade-in effect */
+      .fade-in {
+        opacity: 0;
+        transition: opacity 0.7s ease-in-out;
+      }
+      .fade-in.visible {
+        opacity: 1;
+      }
     </style>
     <script>
       function toggleDarkMode() {
@@ -90,39 +98,10 @@
           localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
       }
       window.onload = function() {
-          // Random background disabled
-          // var bg = '{% random_bg_image as bgimg %}{% if bgimg %}'+ '{% static bgimg %}' +'{% endif %}';
-          // if (bg && bg !== '{% static "" %}') {
-          //   document.body.classList.add('bg-random');
-          //   document.body.style.backgroundImage = 'url(' + bg + ')';
-          // }
           if (localStorage.getItem('darkMode') === 'true') {
               document.body.classList.add('dark-mode');
           }
       }
-      document.addEventListener("DOMContentLoaded", function () {
-	  const header = document.querySelector('header');
-	  const main = document.querySelector('main.container');
-
-	  function updateMainPadding() {
-              main.style.paddingTop = header.offsetHeight + 'px';
-	  }
-
-	  function handleScroll() {
-              if (window.scrollY > 50) {
-		  header.classList.add('shrink');
-              } else {
-		  header.classList.remove('shrink');
-              }
-              updateMainPadding();
-	  }
-
-	  // Initial adjustment
-	  updateMainPadding();
-
-	  window.addEventListener('scroll', handleScroll);
-	  window.addEventListener('resize', updateMainPadding);
-      });
     </script>
 </head>
 <body>

@@ -10,15 +10,25 @@ body {
     font-family: 'Inter', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    //background-color: #f4f6fb;
+    background-color: #f4f6fb;
     background: linear-gradient(180deg, #f2f7f3 0%, #d9e7df 100%);
     background-attachment: fixed;
     color: #222;
     transition: background 0.3s, color 0.3s;
 }
 
+/* Fade-in animation for body and main content */
+body, main.container {
+    opacity: 0;
+    animation: fadeInBody 1.1s ease-in forwards;
+}
+@keyframes fadeInBody {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 body.dark-mode {
-    //background-color: #181a1b;
+    background-color: #181a1b;
     background: linear-gradient(180deg, #1a1f1b 0%, #0c100d 100%);
     background-attachment: fixed;
     color: #e0e0e0;
@@ -31,6 +41,9 @@ header, footer {
     text-align: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     transition: background 0.3s, color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 body.dark-mode header, body.dark-mode footer {
     background: linear-gradient(90deg, var(--main-green) 0%, var(--main-green-dark) 100%);
@@ -49,10 +62,25 @@ nav a {
     transition: color 0.2s, background 0.2s;
     border-radius: 4px;
     padding: 6px 12px;
+    position: relative;
+    overflow: hidden;
+}
+nav a::after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 100%; height: 2px;
+    background: var(--main-green-light);
+    transform: scaleX(0);
+    transition: transform 0.25s;
 }
 nav a:hover {
     color: var(--main-green-light);
     background: rgba(255,255,255,0.08);
+}
+nav a:hover::after {
+    transform: scaleX(1);
 }
 
 main {
@@ -73,6 +101,7 @@ main {
     width: 100%;
     box-sizing: border-box;
     display: block;
+    transition: box-shadow 0.3s, transform 0.25s;
 }
 @media (min-width: 700px) {
   .opportunity-card, .application-card {
@@ -88,7 +117,8 @@ body.dark-mode .opportunity-card, body.dark-mode .application-card {
     border: 1px solid #333;
 }
 .opportunity-card:hover, .application-card:hover {
-    box-shadow: 0 8px 32px rgba(20,83,45,0.10);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(20,83,45,0.13);
 }
 
 button, .btn {
@@ -101,9 +131,12 @@ button, .btn {
     font-weight: 600;
     cursor: pointer;
     margin: 0.2em 0.2em 0.2em 0;
-    transition: background 0.2s, box-shadow 0.2s;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
     box-shadow: 0 2px 8px rgba(20,83,45,0.07);
     text-decoration: none;
+}
+button:active, .btn:active {
+    transform: scale(0.97);
 }
 button:hover, .btn:hover {
     background: var(--main-green-dark);
@@ -170,13 +203,16 @@ body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
 }
 
 .header-flex {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: 48px;
+  justify-content: center;
+  min-height: 70px;
 }
 .logo {
-  font-size: 2.2em;
+  font-size: 2em;
   font-weight: 700;
   letter-spacing: 1px;
   margin-right: 1.5em;
@@ -244,27 +280,17 @@ body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
     .notification-bell svg { height: 22px; width: 22px; }
 }
 
-header{
+header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    height: 70px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    transition: all 0.25s ease;
+    transition: background 0.3s, color 0.3s;
     z-index: 1000;
 }
 
-header.shrink .header-flex {
-    min-height: 36px; /* smaller height when scrolling */
-    padding: 0.2em 0;
-    transition: padding 0.25s ease, min-height 0.25s ease;
-}
-
-header.shrink .logo {
-    font-size: 1.4em; /* reduce logo text size */
-    transition: font-size 0.25s ease;
-}
-
 main.container {
-    padding-top: 70px; /* offset for fixed header height */
+    padding-top: 90px; /* Increased to ensure content is not covered by header */
 }
