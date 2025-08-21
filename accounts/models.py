@@ -10,6 +10,7 @@ class User(AbstractUser):
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default="volunteer")
     skills = models.CharField(max_length=255, blank=True, help_text="Comma-separated skills (e.g. Python, Fundraising, Event Planning)")
+    is_approved = models.BooleanField(default=True, help_text="Admin approval required for NGOs")
 
     def __str__(self):
         return f"{self.username} ({self.role})"

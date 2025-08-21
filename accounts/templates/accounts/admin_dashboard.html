@@ -2,6 +2,7 @@
 {% block title %}Admin Dashboard{% endblock %}
 {% block content %}
   <h2>Admin Dashboard: Reports</h2>
+  <a href="{% url 'admin_statistics' %}" class="btn" style="float:right;margin-bottom:1em;">View Statistics</a>
   <h3>Pending Admin Approvals</h3>
   {% if pending_admins %}
     <table>
@@ -35,6 +36,41 @@
     </table>
   {% else %}
     <p>No pending admin approvals.</p>
+  {% endif %}
+  <hr>
+  <h3>Pending NGO Approvals</h3>
+  {% if pending_ngos %}
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Approve</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ngo in pending_ngos %}
+        <tr>
+          <td>{{ ngo.username }}</td>
+          <td>{{ ngo.email }}</td>
+          <td>
+            <form method="post" style="display:inline;">
+              {% csrf_token %}
+              <input type="hidden" name="approve_ngo_id" value="{{ ngo.id }}">
+              <button type="submit">Approve</button>
+            </form>
+            <form method="post" style="display:inline; margin-left:8px;">
+              {% csrf_token %}
+              <input type="hidden" name="reject_ngo_id" value="{{ ngo.id }}">
+              <button type="submit" style="background:#c00; color:#fff;">Reject</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No pending NGO approvals.</p>
   {% endif %}
   <hr>
   <h3>User Reports</h3>

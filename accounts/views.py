@@ -13,6 +13,8 @@ from reportlab.lib.colors import HexColor
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 from django.db.models import Avg
+from django.contrib.admin.views.decorators import staff_member_required
+from datetime import timedelta
 
 
 def index(request):
@@ -24,6 +26,8 @@ def user_login(request):
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
+            if getattr(user, 'role', None) == "ngo" and not getattr(user, 'is_approved', True):
+                return render(request, "accounts/login.html", {"form": form, "not_approved": True})
             login(request, user)
             # Redirect based on role
             if getattr(user, 'role', None) == "admin" or user.is_superuser:
@@ -56,9 +60,13 @@ def register(request):
                 else:
                     user.is_staff = False  # Not active admin yet
                     user.is_active = False  # Require approval
+            if user.role == "ngo":
+                user.is_approved = False  # Require admin approval for NGOs
             user.skills = form.cleaned_data.get("skills", "")
             user.save()
-            if user.role == "ngo":
+            if user.role == "ngo" and not user.is_approved:
+                return render(request, "accounts/register.html", {"form": RegistrationForm(), "pending_approval": True})
+            elif user.role == "ngo":
                 login(request, user)
                 return redirect("/accounts/dashboard/ngo/")
             elif user.role == "volunteer":
@@ -198,10 +206,29 @@ def admin_dashboard(request):
                     user_to_delete.delete()
             except User.DoesNotExist:
                 pass
-    reports = Report.objects.all().order_by("-created_at")
+        elif "approve_ngo_id" in request.POST:
+            ngo_id = request.POST.get("approve_ngo_id")
+            try:
+                ngo_user = User.objects.get(id=ngo_id, role="ngo", is_approved=False)
+                ngo_user.is_approved = True
+                ngo_user.save()
+            except User.DoesNotExist:
+                pass
+        elif "reject_ngo_id" in request.POST:
+            ngo_id = request.POST.get("reject_ngo_id")
+            try:
+                ngo_user = User.objects.get(id=ngo_id, role="ngo", is_approved=False)
+                ngo_user.delete()
+            except User.DoesNotExist:
+                pass
+    pending_ngos = User.objects.filter(role="ngo", is_approved=False)
     pending_admins = User.objects.filter(role="admin", is_active=False)
-    users_to_manage = User.objects.filter(role__in=["volunteer", "ngo"]).order_by("role", "username")
-    return render(request, "accounts/admin_dashboard.html", {"reports": reports, "pending_admins": pending_admins, "users_to_manage": users_to_manage})
+    reports = Report.objects.all().order_by("-created_at")
+    return render(request, "accounts/admin_dashboard.html", {
+        "pending_admins": pending_admins,
+        "pending_ngos": pending_ngos,
+        "reports": reports,
+    })
 
 
 @login_required
@@ -290,3 +317,28 @@ def get_notification_count(request):
             from .models import Report
             count = Report.objects.filter(handled=False).count()
     return {'notification_count': count}
+
+
+@staff_member_required
+def admin_statistics(request):
+    now = timezone.now()
+    start_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    start_week = now - timedelta(days=now.weekday())
+    start_week = start_week.replace(hour=0, minute=0, second=0, microsecond=0)
+    start_year = now.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
+    User = get_user_model()
+    stats = {
+        'accounts_month': User.objects.filter(date_joined__gte=start_month).count(),
+        'accounts_week': User.objects.filter(date_joined__gte=start_week).count(),
+        'accounts_year': User.objects.filter(date_joined__gte=start_year).count(),
+        'accounts_total': User.objects.count(),
+        'reports_month': Report.objects.filter(created_at__gte=start_month).count(),
+        'reports_week': Report.objects.filter(created_at__gte=start_week).count(),
+        'reports_year': Report.objects.filter(created_at__gte=start_year).count(),
+        'reports_total': Report.objects.count(),
+        'opportunities_month': Opportunity.objects.filter(created_at__gte=start_month).count(),
+        'opportunities_week': Opportunity.objects.filter(created_at__gte=start_week).count(),
+        'opportunities_year': Opportunity.objects.filter(created_at__gte=start_year).count(),
+        'opportunities_total': Opportunity.objects.count(),
+    }
+    return render(request, 'accounts/statistics.html', {'stats': stats})

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Platform Statistics{% endblock %}
+{% block content %}
+  <h2>Platform Statistics</h2>
+  <div class="stats-section">
+    <h3>Accounts Created</h3>
+    <ul>
+      <li>This Month: {{ stats.accounts_month }}</li>
+      <li>This Week: {{ stats.accounts_week }}</li>
+      <li>This Year: {{ stats.accounts_year }}</li>
+      <li>Total: {{ stats.accounts_total }}</li>
+    </ul>
+    <h3>Reports Posted</h3>
+    <ul>
+      <li>This Month: {{ stats.reports_month }}</li>
+      <li>This Week: {{ stats.reports_week }}</li>
+      <li>This Year: {{ stats.reports_year }}</li>
+      <li>Total: {{ stats.reports_total }}</li>
+    </ul>
+    <h3>Opportunities Posted</h3>
+    <ul>
+      <li>This Month: {{ stats.opportunities_month }}</li>
+      <li>This Week: {{ stats.opportunities_week }}</li>
+      <li>This Year: {{ stats.opportunities_year }}</li>
+      <li>Total: {{ stats.opportunities_total }}</li>
+    </ul>
+  </div>
+{% endblock %}

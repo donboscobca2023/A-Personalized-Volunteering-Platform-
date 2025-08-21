@@ -6,6 +6,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Volunteering Platform{% endblock %}</title>
+    <!-- stop white flash in dark mode -->
+    <script>
+      (function() {
+        try {
+          var dark = localStorage.getItem('darkMode');
+          if (dark === 'true' || (dark === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.style.background = '#181a1b';
+            document.addEventListener('DOMContentLoaded', function() {
+              document.body.classList.add('dark-mode');
+            });
+          }
+        } catch(e) {}
+      })();
+    </script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
       .container { max-width: 900px; margin: 0 auto; padding: 2em 1em; }

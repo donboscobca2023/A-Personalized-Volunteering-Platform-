@@ -12,7 +12,7 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(widget=forms.PasswordInput)
 
 
-class RegistrationForm(UserCreationForm):
+class RegistrationForm(forms.ModelForm):
     ROLE_CHOICES = (
         ("volunteer", "Volunteer"),
         ("ngo", "NGO"),
@@ -25,6 +25,8 @@ class RegistrationForm(UserCreationForm):
         help_text="Comma-separated skills (e.g. Python, Fundraising, Event Planning)",
         widget=forms.TextInput(attrs={"placeholder": "e.g. Python, Fundraising, Event Planning"}),
     )
+    password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
+    password2 = forms.CharField(label="Confirm Password", widget=forms.PasswordInput)
 
     class Meta:
         model = User
@@ -32,10 +34,21 @@ class RegistrationForm(UserCreationForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            self.add_error("password2", "The two password fields must match.")
         role = cleaned_data.get("role")
         if role != "volunteer":
             cleaned_data["skills"] = ""
         return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+        return user
 
 
 class EditAccountForm(forms.ModelForm):

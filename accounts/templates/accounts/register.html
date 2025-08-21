@@ -4,10 +4,33 @@
 
 {% block content %}
   <h2>Register</h2>
-  <form method="post">
+  <form method="post" id="register-form">
     {% csrf_token %}
     {{ form.as_p }}
+    <div id="password-feedback" style="color: #d32f2f; font-size: 0.95em;"></div>
     <button type="submit">Sign Up</button>
   </form>
   <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+  <script>
+    const password1 = document.getElementById('id_password1');
+    const password2 = document.getElementById('id_password2');
+    const feedback = document.getElementById('password-feedback');
+    function checkPasswords() {
+      if (!password1.value) {
+        feedback.textContent = '';
+        return;
+      }
+      if (password2.value && password1.value !== password2.value) {
+        feedback.textContent = 'Passwords do not match.';
+        feedback.style.color = '#d32f2f';
+      } else if (password1.value && password2.value && password1.value === password2.value) {
+        feedback.textContent = 'Password looks good!';
+        feedback.style.color = '#388e3c';
+      } else {
+        feedback.textContent = '';
+      }
+    }
+    password1.addEventListener('input', checkPasswords);
+    password2.addEventListener('input', checkPasswords);
+  </script>
 {% endblock %}
