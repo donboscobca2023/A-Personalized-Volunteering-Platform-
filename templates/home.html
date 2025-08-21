@@ -2,63 +2,238 @@
 {% load static %}
 {% block title %}Welcome to Volunteering Platform{% endblock %}
 {% block content %}
-<!-- Welcome Section with Background Image and Overlay -->
-<section class="welcome-section" style="position:relative; min-height: 420px; display:flex; align-items:center; justify-content:center; background: linear-gradient(120deg, rgba(34,197,94,0.13) 0%, rgba(20,83,45,0.18) 100%), url('{% static 'img/volunteers-601662_1920.jpg' %}') center/cover no-repeat; border-radius: 18px; margin: 2.5em auto 2em auto; max-width: 1100px; box-shadow: 0 8px 32px rgba(20,83,45,0.10);">
-  <div class="welcome-content" style="background: rgba(255,255,255,0.88); border-radius: 14px; padding: 2.5em 2em; max-width: 600px; margin: 2em; box-shadow: 0 2px 12px rgba(20,83,45,0.07); text-align:center;">
-    <h1 style="font-size:2.5em; font-weight:800; color: var(--main-green); margin-bottom:0.4em;">Empower Change. <span style="color:var(--main-green-light);">Volunteer</span> Today!</h1>
-    <p class="lead" style="font-size:1.3em; color:#333; margin-bottom:1.7em;">A personalized platform connecting passionate volunteers with impactful opportunities.</p>
-    <div class="home-actions">
-      <a href="{% url 'register' %}" class="btn" style="font-size:1.1em;">Get Started</a>
-      <a href="{% url 'general_feed' %}" class="btn btn-outline" style="font-size:1.1em;">Explore Opportunities</a>
-    </div>
+<!-- Top Section with True Left-to-Right Sliding Image -->
+<section class="top-section" style="position:relative; min-height: 420px; display:flex; align-items:center; justify-content:center; border-radius: 18px; margin: 2.5em auto 2em auto; max-width: 1100px; box-shadow: 0 8px 32px rgba(20,83,45,0.10); overflow:hidden; background: linear-gradient(120deg, #22c55e33 0%, #14532d44 100%);">
+  <div id="slide-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;overflow:hidden;"></div>
+  <div class="top-content" style="background: rgba(255,255,255,0.96); border-radius: 16px; padding: 2.7em 2.2em; max-width: 600px; margin: 2em; box-shadow: 0 2px 12px rgba(20,83,45,0.07); text-align:center; position:relative; z-index:1;">
+    <h1 style="font-size:2.7em; font-weight:800; color: var(--main-green); margin-bottom:0.4em; letter-spacing:1px;">Empower Change.<br><span style="color:var(--main-green-light);">Volunteer</span> Today!</h1>
+    <p style="font-size:1.25em; color:#333; margin-bottom:1.7em;">Connect with opportunities that match your skills and interests.</p>
+    <a href="{% url 'register' %}" class="btn animated-cta" style="font-size:1.15em;">Get Started</a>
+    <a href="{% url 'general_feed' %}" class="btn btn-outline" style="font-size:1.15em; margin-left:0.7em;">Explore Opportunities</a>
   </div>
+  <script>
+    const slideBg = document.getElementById('slide-bg');
+    const images = [
+      "{% static 'img/Volunteers Graphic.png' %}",
+      "{% static 'img/raised-hands-volunteering-and-blue-background-vector-concept.jpg' %}",
+      "{% static 'img/composition-still-life-friendship-day-elements.jpg' %}"
+    ];
+    let idx = 0;
+    function showSlide(i, direction = 1) {
+      // direction: 1 = left-to-right, -1 = right-to-left
+      const nextImg = document.createElement('img');
+      nextImg.src = images[i];
+      nextImg.style.position = 'absolute';
+      nextImg.style.top = '0';
+      nextImg.style.left = direction === 1 ? '100%' : '-100%';
+      nextImg.style.width = '100%';
+      nextImg.style.height = '100%';
+      nextImg.style.objectFit = 'cover';
+      nextImg.style.transition = 'left 1.2s';
+      slideBg.appendChild(nextImg);
+      setTimeout(() => {
+        nextImg.style.left = '0';
+        const oldImg = slideBg.querySelectorAll('img')[0];
+        if (oldImg && oldImg !== nextImg) {
+          oldImg.style.left = direction === 1 ? '-100%' : '100%';
+          setTimeout(() => {
+            if (oldImg.parentNode) oldImg.parentNode.removeChild(oldImg);
+          }, 1200);
+        }
+      }, 50);
+    }
+    showSlide(idx);
+    setInterval(() => {
+      idx = (idx + 1) % images.length;
+      showSlide(idx, 1);
+    }, 3500);
+  </script>
 </section>
 
 <!-- About the Project Section -->
-<section class="about-section" style="max-width: 900px; margin: 0 auto 2.5em auto; background: #fff; border-radius: 14px; box-shadow: 0 4px 16px rgba(20,83,45,0.08); padding: 2.2em 1.5em;">
+<section class="about-section" style="max-width: 900px; margin: 0 auto 2.5em auto; background: #fff; border-radius: 14px; box-shadow: 0 4px 16px rgba(20,83,45,0.08); padding: 2.2em 1.5em; position:relative;">
   <h2 style="color: var(--main-green); font-size:2em; font-weight:700; margin-bottom:0.7em; text-align:center;">About Our Platform</h2>
-  <p style="font-size:1.15em; color:#444; text-align:center; max-width:700px; margin:0 auto 1.5em auto;">The proposed system is a comprehensive, web-based volunteering portal designed to connect individuals with social impact projects that align with their skills, interests, and availability. It streamlines volunteer engagement, enables data-driven coordination for NGOs, and fosters a more structured, impactful, and rewarding volunteering ecosystem.</p>
+  <p style="font-size:1.15em; color:#444; text-align:center; max-width:700px; margin:0 auto 1.5em auto;">A comprehensive, web-based volunteering portal designed to connect individuals with social impact projects that align with their skills, interests, and availability.</p>
   <div class="about-highlights" style="display:flex; flex-wrap:wrap; justify-content:center; gap:2em; margin-top:1.5em;">
-    <div style="flex:1 1 220px; min-width:200px; max-width:260px; background:linear-gradient(120deg,#f2f7f3 60%,#d9e7df 100%); border-radius:10px; padding:1.2em 1em; text-align:center;">
-      <img src="{% static 'img/raised-hands-volunteering-and-blue-background-vector-concept.jpg' %}" alt="Connect" style="width:54px; height:54px; border-radius:50%; margin-bottom:0.7em; box-shadow:0 2px 8px #22c55e22;">
-      <h3 style="color:var(--main-green); font-size:1.15em; font-weight:600; margin-bottom:0.3em;">Personalized Matching</h3>
-      <p style="font-size:0.98em; color:#333;">Volunteers get tailored opportunities based on their skills and interests.</p>
+    <div class="highlight-card" style="flex:1 1 220px; min-width:200px; max-width:260px; text-align:center;">
+      <img src="{% static 'img/raised-hands-volunteering-and-blue-background-vector-concept.jpg' %}" alt="Connect" class="highlight-icon">
+      <h3>Personalized Matching</h3>
+      <p>Volunteers get tailored opportunities based on their skills and interests.</p>
     </div>
-    <div style="flex:1 1 220px; min-width:200px; max-width:260px; background:linear-gradient(120deg,#f2f7f3 60%,#d9e7df 100%); border-radius:10px; padding:1.2em 1em; text-align:center;">
-      <img src="{% static 'img/Volunteers Graphic.png' %}" alt="Track" style="width:54px; height:54px; border-radius:50%; margin-bottom:0.7em; box-shadow:0 2px 8px #22c55e22;">
-      <h3 style="color:var(--main-green); font-size:1.15em; font-weight:600; margin-bottom:0.3em;">Easy Tracking</h3>
-      <p style="font-size:0.98em; color:#333;">Track your applications, participation, and receive digital certificates.</p>
+    <div class="highlight-card" style="flex:1 1 220px; min-width:200px; max-width:260px; text-align:center;">
+      <img src="{% static 'img/Volunteers Graphic.png' %}" alt="Track" class="highlight-icon">
+      <h3>Easy Tracking</h3>
+      <p>Track your applications, participation, and receive digital certificates.</p>
     </div>
-    <div style="flex:1 1 220px; min-width:200px; max-width:260px; background:linear-gradient(120deg,#f2f7f3 60%,#d9e7df 100%); border-radius:10px; padding:1.2em 1em; text-align:center;">
-      <img src="{% static 'img/composition-still-life-friendship-day-elements.jpg' %}" alt="NGO" style="width:54px; height:54px; border-radius:50%; margin-bottom:0.7em; box-shadow:0 2px 8px #22c55e22;">
-      <h3 style="color:var(--main-green); font-size:1.15em; font-weight:600; margin-bottom:0.3em;">NGO Tools</h3>
-      <p style="font-size:0.98em; color:#333;">NGOs can post, manage, and recognize volunteers with ease.</p>
+    <div class="highlight-card" style="flex:1 1 220px; min-width:200px; max-width:260px; text-align:center;">
+      <img src="{% static 'img/composition-still-life-friendship-day-elements.jpg' %}" alt="NGO" class="highlight-icon">
+      <h3>NGO Tools</h3>
+      <p>NGOs can post, manage, and recognize volunteers with ease.</p>
     </div>
   </div>
 </section>
 
 <!-- How It Works Section -->
-<section class="how-section" style="max-width: 900px; margin: 0 auto 2.5em auto; background: linear-gradient(120deg,#f2f7f3 60%,#d9e7df 100%); border-radius: 14px; box-shadow: 0 4px 16px rgba(20,83,45,0.08); padding: 2.2em 1.5em;">
+<section class="how-section" style="max-width: 900px; margin: 0 auto 2.5em auto; background: linear-gradient(120deg,#f2f7f3 60%,#d9e7df 100%); border-radius: 14px; box-shadow: 0 4px 16px rgba(20,83,45,0.08); padding: 2.2em 1.5em; position:relative;">
   <h2 style="color: var(--main-green); font-size:1.7em; font-weight:700; margin-bottom:0.7em; text-align:center;">How It Works</h2>
   <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:2em; margin-top:1.5em;">
-    <div style="flex:1 1 200px; min-width:180px; max-width:220px; text-align:center;">
-      <div style="font-size:2.2em; color:var(--main-green-light); margin-bottom:0.3em;">1️⃣</div>
-      <div style="font-weight:600; color:var(--main-green); margin-bottom:0.2em;">Sign Up</div>
-      <div style="font-size:0.98em; color:#333;">Create your profile and set your interests.</div>
+    <div class="step-card" style="flex:1 1 200px; min-width:180px; max-width:220px; text-align:center;">
+      <div class="step-icon">1️⃣</div>
+      <div class="step-title">Sign Up</div>
+      <div class="step-desc">Create your profile and set your interests.</div>
     </div>
-    <div style="flex:1 1 200px; min-width:180px; max-width:220px; text-align:center;">
-      <div style="font-size:2.2em; color:var(--main-green-light); margin-bottom:0.3em;">2️⃣</div>
-      <div style="font-weight:600; color:var(--main-green); margin-bottom:0.2em;">Discover</div>
-      <div style="font-size:0.98em; color:#333;">Browse and apply for opportunities that match you.</div>
+    <div class="step-card" style="flex:1 1 200px; min-width:180px; max-width:220px; text-align:center;">
+      <div class="step-icon">2️⃣</div>
+      <div class="step-title">Discover</div>
+      <div class="step-desc">Browse and apply for opportunities that match you.</div>
     </div>
-    <div style="flex:1 1 200px; min-width:180px; max-width:220px; text-align:center;">
-      <div style="font-size:2.2em; color:var(--main-green-light); margin-bottom:0.3em;">3️⃣</div>
-      <div style="font-weight:600; color:var(--main-green); margin-bottom:0.2em;">Make Impact</div>
-      <div style="font-size:0.98em; color:#333;">Volunteer, track your journey, and earn recognition!</div>
+    <div class="step-card" style="flex:1 1 200px; min-width:180px; max-width:220px; text-align:center;">
+      <div class="step-icon">3️⃣</div>
+      <div class="step-title">Make Impact</div>
+      <div class="step-desc">Volunteer, track your journey, and earn recognition!</div>
     </div>
   </div>
 </section>
 
-<!-- Optional: Add a colorful footer or testimonial section here if desired -->
+<!-- Testimonial Section -->
+<section class="testimonial-section" style="max-width: 900px; margin: 0 auto 2.5em auto; background: #f9fafb; border-radius: 14px; box-shadow: 0 2px 8px rgba(20,83,45,0.07); padding: 2em 1.5em; position:relative;">
+  <h2 style="color: var(--main-green); font-size:1.3em; font-weight:700; margin-bottom:0.7em; text-align:center;">What Our Users Say</h2>
+  <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:2em; margin-top:1em;">
+    <div class="testimonial-card" style="flex:1 1 220px; min-width:200px; max-width:260px; background:#fff; border-radius:12px; padding:1.2em 1em; text-align:center; box-shadow:0 2px 8px #22c55e22; position:relative;">
+      <img src="{% static 'img/volunteers--week-background-i7k4p.jpg' %}" alt="Volunteer" class="testimonial-avatar">
+      <p class="testimonial-text">“I found the perfect opportunity for my skills and made great friends!”</p>
+      <div class="testimonial-author">— Alex, Volunteer</div>
+    </div>
+    <div class="testimonial-card" style="flex:1 1 220px; min-width:200px; max-width:260px; background:#fff; border-radius:12px; padding:1.2em 1em; text-align:center; box-shadow:0 2px 8px #22c55e22; position:relative;">
+      <img src="{% static 'img/volunteers-601662_1920.jpg' %}" alt="NGO" class="testimonial-avatar">
+      <p class="testimonial-text">“Managing volunteers is so much easier now. The dashboard is a lifesaver!”</p>
+      <div class="testimonial-author">— Priya, NGO Coordinator</div>
+    </div>
+  </div>
+</section>
 
+<style>
+/* Enhanced dark mode for homepage sections and inner content */
+body.dark-mode .top-section {
+  background: linear-gradient(120deg, #14532d 0%, #181a1b 100%);
+  box-shadow: 0 8px 32px rgba(34,197,94,0.18);
+  border: 1.5px solid #22c55e33;
+}
+body.dark-mode .top-content {
+  background: rgba(24,26,27,0.98) !important;
+  color: #e2ffe6 !important;
+  box-shadow: 0 2px 16px #22c55e33;
+  border: 1.5px solid #22c55e44;
+}
+body.dark-mode .top-content h1 {
+  color: #22c55e !important;
+  text-shadow: 0 2px 8px #22c55e22;
+}
+body.dark-mode .top-content p {
+  color: #b6e4c7 !important;
+}
+body.dark-mode .btn, body.dark-mode .btn-outline {
+  background: #22c55e !important;
+  color: #181a1b !important;
+  border: none !important;
+  box-shadow: 0 2px 8px #22c55e44;
+}
+body.dark-mode .btn-outline {
+  background: transparent !important;
+  color: #22c55e !important;
+  border: 2px solid #22c55e !important;
+}
+body.dark-mode .about-section {
+  background: linear-gradient(120deg, #23272a 80%, #14532d 100%) !important;
+  color: #e2ffe6 !important;
+  box-shadow: 0 4px 24px #22c55e22;
+  border: 1.5px solid #22c55e33;
+}
+body.dark-mode .about-section h2 {
+  color: #22c55e !important;
+  text-shadow: 0 2px 8px #22c55e22;
+}
+body.dark-mode .about-section p {
+  color: #b6e4c7 !important;
+}
+body.dark-mode .about-highlights .highlight-card {
+  background: #181a1b !important;
+  color: #e2ffe6 !important;
+  box-shadow: 0 2px 12px #22c55e44;
+  border: 1.5px solid #22c55e33;
+  transition: box-shadow 0.3s;
+}
+body.dark-mode .about-highlights .highlight-card:hover {
+  box-shadow: 0 4px 24px #22c55e88;
+}
+body.dark-mode .about-highlights .highlight-card img {
+  filter: brightness(0.85) contrast(1.1) drop-shadow(0 2px 8px #22c55e44);
+}
+body.dark-mode .about-highlights .highlight-card h3 {
+  color: #22c55e !important;
+}
+body.dark-mode .about-highlights .highlight-card p {
+  color: #b6e4c7 !important;
+}
+body.dark-mode .how-section {
+  background: linear-gradient(120deg,#181a1b 60%,#23272a 100%) !important;
+  color: #e2ffe6 !important;
+  box-shadow: 0 4px 24px #22c55e22;
+  border: 1.5px solid #22c55e33;
+}
+body.dark-mode .how-section h2 {
+  color: #22c55e !important;
+  text-shadow: 0 2px 8px #22c55e22;
+}
+body.dark-mode .step-card {
+  background: #23272a !important;
+  color: #e2ffe6 !important;
+  box-shadow: 0 2px 12px #22c55e44;
+  border: 1.5px solid #22c55e33;
+  transition: box-shadow 0.3s;
+}
+body.dark-mode .step-card:hover {
+  box-shadow: 0 4px 24px #22c55e88;
+}
+body.dark-mode .step-icon {
+  color: #22c55e !important;
+  font-size: 1.5em;
+  text-shadow: 0 2px 8px #22c55e22;
+}
+body.dark-mode .step-title {
+  color: #22c55e !important;
+}
+body.dark-mode .step-desc {
+  color: #b6e4c7 !important;
+}
+body.dark-mode .testimonial-section {
+  background: linear-gradient(120deg, #181a1b 80%, #23272a 100%) !important;
+  color: #e2ffe6 !important;
+  box-shadow: 0 2px 16px #22c55e22;
+  border: 1.5px solid #22c55e33;
+}
+body.dark-mode .testimonial-section h2 {
+  color: #22c55e !important;
+  text-shadow: 0 2px 8px #22c55e22;
+}
+body.dark-mode .testimonial-card {
+  background: #23272a !important;
+  color: #e2ffe6 !important;
+  box-shadow: 0 2px 12px #22c55e44;
+  border: 1.5px solid #22c55e33;
+  transition: box-shadow 0.3s;
+}
+body.dark-mode .testimonial-card:hover {
+  box-shadow: 0 4px 24px #22c55e88;
+}
+body.dark-mode .testimonial-card img {
+  filter: brightness(0.85) contrast(1.1) drop-shadow(0 2px 8px #22c55e44);
+}
+body.dark-mode .testimonial-card .testimonial-text {
+  color: #b6e4c7 !important;
+}
+body.dark-mode .testimonial-card .testimonial-author {
+  color: #22c55e !important;
+}
+</style>
 {% endblock %}
