@@ -20,15 +20,18 @@ from datetime import timedelta
 def index(request):
     return render(request, "home.html")
 
-
 def user_login(request):
+    message = None
     if request.method == "POST":
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             if getattr(user, 'role', None) == "ngo" and not getattr(user, 'is_approved', True):
-                # Show pending approval message for NGOs
-                return render(request, "accounts/login.html", {"form": form, "pending_approval": True})
+                message = "Your account is pending approval by an admin. You will be notified once approved."
+                return render(request, "accounts/pending_approval.html", {"message": message})
+            if getattr(user, 'role', None) == "admin" and not getattr(user, 'is_active', True):
+                message = "Your admin account is pending approval. You will be notified once approved."
+                return render(request, "accounts/pending_approval.html", {"message": message})
             login(request, user)
             # Redirect based on role
             if getattr(user, 'role', None) == "admin" or user.is_superuser:
@@ -41,7 +44,6 @@ def user_login(request):
         form = LoginForm()
     return render(request, "accounts/login.html", {"form": form})
 
-
 def user_logout(request):
     logout(request)
     return redirect("home")
@@ -49,6 +51,7 @@ def user_logout(request):
 
 def register(request):
     User = get_user_model()
+    message = None
     if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -66,8 +69,8 @@ def register(request):
             user.skills = form.cleaned_data.get("skills", "")
             user.save()
             if user.role == "ngo" and not user.is_approved:
-                # Show pending approval message for NGOs
-                return render(request, "accounts/register.html", {"form": RegistrationForm(), "pending_approval": True})
+                message = "Your NGO account is pending approval by an admin. You will be notified once approved."
+                return render(request, "accounts/pending_approval.html", {"message": message})
             elif user.role == "ngo":
                 login(request, user)
                 return redirect("/accounts/dashboard/ngo/")
@@ -77,12 +80,36 @@ def register(request):
             elif user.role == "admin" and user.is_active:
                 login(request, user)
                 return redirect("/accounts/admin_dashboard/")
+            elif user.role == "admin" and not user.is_active:
+                message = "Your admin account is pending approval. You will be notified once approved."
+                return render(request, "accounts/pending_approval.html", {"message": message})
             else:
-                # Show a message: Awaiting admin approval
-                return render(request, "accounts/register.html", {"form": RegistrationForm(), "pending_admin": True})
+                # Should not happen, fallback
+                return redirect("home")
+        else:
+            # Form is invalid, show form with errors
+            return render(request, "accounts/register.html", {"form": form})
     else:
         form = RegistrationForm()
-    return render(request, "accounts/register.html", {"form": form})
+        return render(request, "accounts/register.html", {"form": form})
+# Pending approval dashboard for NGOs/admins
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def pending_approval_dashboard(request):
+    # Only show for unapproved NGO or admin
+    if getattr(request.user, 'role', None) == "ngo":
+        if not getattr(request.user, 'is_approved', True):
+            return render(request, "accounts/pending_approval.html")
+        else:
+            return redirect("/accounts/dashboard/ngo/")
+    elif getattr(request.user, 'role', None) == "admin":
+        if not getattr(request.user, 'is_active', True):
+            return render(request, "accounts/pending_approval.html")
+        else:
+            return redirect("/accounts/admin_dashboard/")
+    else:
+        return redirect("home")
 
 
 @login_required

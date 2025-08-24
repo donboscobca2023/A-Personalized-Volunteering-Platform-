@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import user_login, user_logout, register
+from .views import user_login, user_logout, register, pending_approval_dashboard
 from . import views
 
 urlpatterns = [
@@ -16,4 +16,5 @@ urlpatterns = [
     path("download_certificate/<int:app_id>/", views.download_certificate, name="download_certificate"),
     path("notifications/", views.notifications, name="notifications"),
     path("admin_statistics/", views.admin_statistics, name="admin_statistics"),
+    path("pending_approval/", pending_approval_dashboard, name="pending_approval_dashboard"),
 ]
