@@ -27,7 +27,8 @@ def user_login(request):
         if form.is_valid():
             user = form.get_user()
             if getattr(user, 'role', None) == "ngo" and not getattr(user, 'is_approved', True):
-                return render(request, "accounts/login.html", {"form": form, "not_approved": True})
+                # Show pending approval message for NGOs
+                return render(request, "accounts/login.html", {"form": form, "pending_approval": True})
             login(request, user)
             # Redirect based on role
             if getattr(user, 'role', None) == "admin" or user.is_superuser:
@@ -65,6 +66,7 @@ def register(request):
             user.skills = form.cleaned_data.get("skills", "")
             user.save()
             if user.role == "ngo" and not user.is_approved:
+                # Show pending approval message for NGOs
                 return render(request, "accounts/register.html", {"form": RegistrationForm(), "pending_approval": True})
             elif user.role == "ngo":
                 login(request, user)
@@ -125,7 +127,9 @@ def user_profile(request, user_id):
     applications = Application.objects.filter(volunteer=user_obj, status="completed").select_related("opportunity").order_by("-completed_at")
     reviews = applications.exclude(review="").exclude(review__isnull=True)
     avg_rating = reviews.aggregate(avg=Avg("review_rating"))['avg']
-    return render(request, "accounts/profile.html", {"profile_user": user_obj, "applications": applications, "reviews": reviews, "avg_rating": avg_rating})
+    # Only show certificate download if user is viewing their own profile
+    show_certificate = request.user.is_authenticated and request.user.id == user_obj.id
+    return render(request, "accounts/profile.html", {"profile_user": user_obj, "applications": applications, "reviews": reviews, "avg_rating": avg_rating, "show_certificate": show_certificate})
 
 
 @login_required

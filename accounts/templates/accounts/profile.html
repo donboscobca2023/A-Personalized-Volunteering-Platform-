@@ -34,7 +34,9 @@
           <p><strong>Review:</strong> {{ app.review }}</p>
           <p><strong>Rating:</strong> {{ app.review_rating }}/5</p>
         {% endif %}
-        <a class="btn" href="{% url 'download_certificate' app.id %}">Download Certificate</a>
+        {% if show_certificate %}
+          <a class="btn" href="{% url 'download_certificate' app.id %}">Download Certificate</a>
+        {% endif %}
       </div>
     {% endfor %}
   {% else %}
