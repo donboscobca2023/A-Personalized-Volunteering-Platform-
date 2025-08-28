@@ -13,13 +13,15 @@ from reportlab.lib.colors import HexColor
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 from django.db.models import Avg
+from django.views.decorators.cache import never_cache
 from django.contrib.admin.views.decorators import staff_member_required
 from datetime import timedelta
 
-
+@never_cache
 def index(request):
     return render(request, "home.html")
 
+@never_cache
 def user_login(request):
     message = None
     if request.method == "POST":
@@ -71,18 +73,18 @@ def register(request):
             if user.role == "ngo" and not user.is_approved:
                 message = "Your NGO account is pending approval by an admin. You will be notified once approved."
                 return render(request, "accounts/pending_approval.html", {"message": message})
-            elif user.role == "ngo":
-                login(request, user)
-                return redirect("/accounts/dashboard/ngo/")
-            elif user.role == "volunteer":
-                login(request, user)
-                return redirect("/accounts/dashboard/volunteer/")
-            elif user.role == "admin" and user.is_active:
-                login(request, user)
-                return redirect("/accounts/admin_dashboard/")
-            elif user.role == "admin" and not user.is_active:
-                message = "Your admin account is pending approval. You will be notified once approved."
-                return render(request, "accounts/pending_approval.html", {"message": message})
+            #elif user.role == "ngo":
+            #    login(request, user)
+            #    return redirect("/accounts/dashboard/ngo/")
+            #elif user.role == "volunteer":
+            #    login(request, user)
+            #    return redirect("/accounts/dashboard/volunteer/")
+            #elif user.role == "admin" and user.is_active:
+            #    login(request, user)
+            #    return redirect("/accounts/admin_dashboard/")
+            #elif user.role == "admin" and not user.is_active:
+            #    message = "Your admin account is pending approval. You will be notified once approved."
+            #    return render(request, "accounts/pending_approval.html", {"message": message})
             else:
                 # Should not happen, fallback
                 return redirect("home")
