@@ -5,10 +5,11 @@
 {% block content %}
   <h2>Register</h2>
   <form method="post" id="register-form">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <div id="password-feedback" style="color: #d32f2f; font-size: 0.95em;"></div>
-    <button type="submit">Sign Up</button>
+  {% csrf_token %}
+  {{ form.as_p }}
+  <div id="show-password-container" style="margin-top:5px; display:inline-flex; align-items:baseline; gap:6px;"></div>
+  <div id="password-feedback" style="color: #d32f2f; font-size: 0.95em;"></div>
+  <button type="submit">Sign Up</button>
   </form>
   <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
   <script>
@@ -32,5 +33,30 @@
     }
     password1.addEventListener('input', checkPasswords);
     password2.addEventListener('input', checkPasswords);
+
+    // Single Show Password checkbox for both fields
+    document.addEventListener('DOMContentLoaded', function() {
+      var pwd1 = document.getElementById('id_password1');
+      var pwd2 = document.getElementById('id_password2');
+      var container = document.getElementById('show-password-container');
+      if (pwd1 && pwd2) {
+        var cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.id = 'showPassword';
+        cb.style.marginRight = '6px';
+        var label = document.createElement('label');
+        label.htmlFor = 'showPassword';
+        label.innerText = 'Show Password';
+        label.style.marginBottom = '0';
+        label.style.whiteSpace = 'nowrap';
+        cb.addEventListener('change', function() {
+          var type = this.checked ? 'text' : 'password';
+          pwd1.type = type;
+          pwd2.type = type;
+        });
+        container.appendChild(cb);
+        container.appendChild(label);
+      }
+    });
   </script>
 {% endblock %}

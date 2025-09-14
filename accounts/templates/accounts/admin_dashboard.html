@@ -78,10 +78,10 @@
     <table>
       <thead>
         <tr>
-          <th>ID</th>
+          <!--<th>ID</th>-->
           <th>Reporter</th>
           <th>Reported</th>
-          <th>Type</th>
+          <!--<th>Type</th>-->
           <th>Reason</th>
           <th>Created</th>
           <th>Status</th>
@@ -91,10 +91,10 @@
       <tbody>
         {% for report in reports %}
         <tr>
-          <td>{{ report.id }}</td>
+          <!--<td>{{ report.id }}</td>-->
           <td>{{ report.reporter }}</td>
           <td>{{ report.reported }}</td>
-          <td>{{ report.report_type }}</td>
+          <!--<td>{{ report.report_type }}</td>-->
           <td>{{ report.reason }}</td>
           <td>{{ report.created_at }}</td>
           <td>{% if report.handled %}Resolved{% else %}Open{% endif %}</td>

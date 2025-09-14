@@ -83,7 +83,8 @@ def manage_applications(request, opportunity_id):
     if request.user.role != "ngo":
         return render(request, "403.html")
     opportunity = get_object_or_404(Opportunity, id=opportunity_id, ngo=request.user)
-    applications = Application.objects.filter(opportunity=opportunity)
+    #applications = Application.objects.filter(opportunity=opportunity)
+    applications = Application.objects.filter(opportunity=opportunity).all().order_by("-applied_at")
     if request.method == "POST":
         app_id = request.POST.get("app_id")
         action = request.POST.get("action")

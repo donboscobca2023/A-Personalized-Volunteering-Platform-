@@ -4,9 +4,33 @@
 
 {% block content %}
   <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
+  <form method="post" id="login-form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <div id="show-password-container" style="margin-top:5px; display:inline-flex; align-items:baseline; gap:6px;"></div>
+  <br>
+  <button type="submit">Login</button>
   </form>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var pwdField = document.querySelector('#login-form input[type="password"]');
+      var container = document.getElementById('show-password-container');
+      if (pwdField && container) {
+        var cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.id = 'showPasswordLogin';
+        cb.style.marginRight = '6px';
+        var label = document.createElement('label');
+        label.htmlFor = 'showPasswordLogin';
+        label.innerText = 'Show Password';
+        label.style.marginBottom = '0';
+        label.style.whiteSpace = 'nowrap';
+        cb.addEventListener('change', function() {
+          pwdField.type = this.checked ? 'text' : 'password';
+        });
+        container.appendChild(cb);
+        container.appendChild(label);
+      }
+    });
+  </script>
 {% endblock %}

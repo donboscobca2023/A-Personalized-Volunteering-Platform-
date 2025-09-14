@@ -31,7 +31,7 @@
         <p><strong>Status:</strong> {{ app.get_status_display }}</p>
         <p><strong>Completed at:</strong> {{ app.completed_at }}</p>
         {% if app.review %}
-          <p><strong>Review:</strong> {{ app.review }}</p>
+          <!--<p><strong>Review:</strong> {{ app.review }}</p>-->
           <p><strong>Rating:</strong> {{ app.review_rating }}/5</p>
         {% endif %}
         {% if show_certificate %}
