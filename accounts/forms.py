@@ -38,6 +38,13 @@ class RegistrationForm(forms.ModelForm):
         password2 = cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
             self.add_error("password2", "The two password fields must match.")
+        # Check for duplicate username/email
+        username = cleaned_data.get("username")
+        email = cleaned_data.get("email")
+        if username and User.objects.filter(username=username).exists():
+            self.add_error("username", "This username is already taken.")
+        if email and User.objects.filter(email=email).exists():
+            self.add_error("email", "This email is already registered.")
         role = cleaned_data.get("role")
         if role != "volunteer":
             cleaned_data["skills"] = ""

@@ -15,6 +15,7 @@
         <p><strong>Dates:</strong> {{ app.opportunity.start_date }} to {{ app.opportunity.end_date }}</p>
         <p><strong>Status:</strong> <span style="font-weight:600;">{{ app.get_status_display }}</span></p>
         <p><small>Applied at {{ app.applied_at }}</small></p>
+        <a class="btn" href="{% url 'view_tasks' app.id %}">View Tasks</a>
       </div>
     {% endfor %}
   {% else %}

@@ -8,6 +8,21 @@
     <p><strong>Skills:</strong> {{ app.volunteer.skills|default:'Not set' }}</p>
     <p><strong>Status:</strong> {{ app.get_status_display }}</p>
     <p><strong>Applied at:</strong> {{ app.applied_at }}</p>
+    {% if app.tasks.exists %}
+      <h4>Assigned Tasks:</h4>
+      <ul>
+        {% for task in app.tasks.all %}
+          <li>
+            <strong>{{ task.title }}</strong>: {{ task.description }}
+            {% if task.is_completed %}
+              <span style="color:green;">(Completed)</span>
+            {% else %}
+              <span style="color:orange;">(Pending)</span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
     {% if app.status == 'pending' %}
       <form method="post" style="display:inline;">
         {% csrf_token %}
@@ -17,6 +32,7 @@
       </form>
       <a class="btn" href="{% url 'mark_application_completed' app.id %}">Mark as Completed</a>
     {% elif app.status == 'approved' %}
+      <a class="btn" href="{% url 'assign_task' app.id %}">Assign Task</a>
       <a class="btn" href="{% url 'mark_application_completed' app.id %}">Mark as Completed</a>
     {% elif app.status == 'completed' and not app.review %}
       <a class="btn" href="{% url 'review_application' app.id %}">Leave Review</a>

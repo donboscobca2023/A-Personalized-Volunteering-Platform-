@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Your Tasks{% endblock %}
+{% block content %}
+  <h2>Tasks for {{ app.opportunity.title }}</h2>
+  {% if tasks %}
+    <ul>
+      {% for task in tasks %}
+        <li>
+          <strong>{{ task.title }}</strong>: {{ task.description }}
+          {% if task.is_completed %}
+            <span style="color:green;">(Completed)</span>
+          {% else %}
+            <form method="post" action="{% url 'complete_task' task.id %}" style="display:inline;" onsubmit="return confirm('Are you sure you want to mark this task as completed?');">
+              {% csrf_token %}
+              <button type="submit">Mark as Completed</button>
+            </form>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No tasks assigned yet.</p>
+  {% endif %}
+{% endblock %}

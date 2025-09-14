@@ -31,4 +31,19 @@ urlpatterns = [
         views.review_application,
         name="review_application",
     ),
+    path(
+        "assign_task/<int:app_id>/",
+        views.assign_task,
+        name="assign_task",
+    ),
+    path(
+        "view_tasks/<int:app_id>/",
+        views.view_tasks,
+        name="view_tasks",
+    ),
+    path(
+        "complete_task/<int:task_id>/",
+        views.complete_task,
+        name="complete_task",
+    ),
 ]

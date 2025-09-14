@@ -37,6 +37,7 @@
         {% if show_certificate %}
           <a class="btn" href="{% url 'download_certificate' app.id %}">Download Certificate</a>
         {% endif %}
+        <a class="btn" href="{% url 'view_tasks' app.id %}">View Tasks</a>
       </div>
     {% endfor %}
   {% else %}

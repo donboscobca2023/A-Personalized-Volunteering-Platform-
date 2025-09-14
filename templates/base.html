@@ -133,11 +133,11 @@
             {% elif user.role == 'admin' %}
               <a href="{% url 'admin_dashboard' %}">Dashboard</a>
             {% endif %}
-            <span class="notification-bell">
+            <!--<span class="notification-bell">
               <a href="{% url 'notifications' %}" style="text-decoration:none;">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="{% if notification_count and notification_count > 0 %}red{% else %}white{% endif %}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
               </a>
-            </span>
+            </span>-->
             <button class="dark-toggle-btn" onclick="toggleDarkMode()">🌙</button>
           {% else %}
             <a href="{% url 'login' %}">Login</a>

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Complete Task{% endblock %}
+{% block content %}
+  <h2>Complete Task: {{ task.title }}</h2>
+  <p>{{ task.description }}</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirm Completion</button>
+  </form>
+{% endblock %}

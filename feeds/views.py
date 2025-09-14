@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .models import Opportunity, Application
-from .forms import OpportunityForm
+from .models import Opportunity, Application, Task
+from .forms import OpportunityForm, TaskForm
 from django.shortcuts import redirect, get_object_or_404
 from django.db.models import Q
 from django.utils import timezone
 from accounts.forms import ReviewForm
+from django.http import HttpResponseForbidden
 
 
 def general_feed(request):
@@ -170,3 +171,42 @@ def edit_opportunity(request, opportunity_id):
     else:
         form = OpportunityForm(instance=opportunity)
     return render(request, "feeds/edit_opportunity.html", {"form": form, "opportunity": opportunity})
+
+
+@login_required
+def assign_task(request, app_id):
+    app = get_object_or_404(Application, id=app_id)
+    if request.user.role != "ngo" or app.opportunity.ngo != request.user or app.status != "approved":
+        return HttpResponseForbidden()
+    if request.method == "POST":
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.application = app
+            task.save()
+            return redirect("manage_applications", opportunity_id=app.opportunity.id)
+    else:
+        form = TaskForm()
+    return render(request, "feeds/assign_task.html", {"form": form, "app": app})
+
+
+@login_required
+def view_tasks(request, app_id):
+    app = get_object_or_404(Application, id=app_id)
+    if request.user != app.volunteer:
+        return HttpResponseForbidden()
+    tasks = app.tasks.all()
+    return render(request, "feeds/view_tasks.html", {"tasks": tasks, "app": app})
+
+
+@login_required
+def complete_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    if request.user != task.application.volunteer:
+        return HttpResponseForbidden()
+    if request.method == "POST":
+        task.is_completed = True
+        task.completed_at = timezone.now()
+        task.save()
+        return redirect("view_tasks", app_id=task.application.id)
+    return render(request, "feeds/complete_task.html", {"task": task})
