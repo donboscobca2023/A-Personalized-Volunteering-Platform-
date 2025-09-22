@@ -5,6 +5,7 @@
 {% for app in applications %}
   <div class="application-card">
     <p><strong>Volunteer:</strong> <a href="{% url 'user_profile' app.volunteer.id %}">{{ app.volunteer.username }}</a></p>
+    <p><strong>Email:</strong> {{ app.volunteer.email }}</p>
     <p><strong>Skills:</strong> {{ app.volunteer.skills|default:'Not set' }}</p>
     <p><strong>Status:</strong> {{ app.get_status_display }}</p>
     <p><strong>Applied at:</strong> {{ app.applied_at }}</p>
