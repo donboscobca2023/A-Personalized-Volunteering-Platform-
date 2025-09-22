@@ -10,7 +10,7 @@
     <p><strong>Location:</strong> {{ opportunity.location }}</p>
     <p><strong>Dates:</strong> {{ opportunity.start_date }} to {{ opportunity.end_date }}</p>
     <p>{{ opportunity.description }}</p>
-    <p><strong>Skills:</strong> {{ opportunity.skills_required }}</p>
+  <p><strong>Skills Recommended:</strong> {{ opportunity.skills_recommended }}</p>
     <a class="btn" href="{% url 'manage_applications' opportunity.id %}">Manage Applications</a>
     <a class="btn" href="{% url 'edit_opportunity' opportunity.id %}">Edit</a>
   </div>

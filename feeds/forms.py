@@ -11,7 +11,7 @@ class OpportunityForm(forms.ModelForm):
             "location",
             "start_date",
             "end_date",
-            "skills_required",
+            "skills_recommended",
         ]
         widgets = {
             "start_date": forms.DateInput(attrs={"type": "date"}),

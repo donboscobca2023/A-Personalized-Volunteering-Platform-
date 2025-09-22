@@ -16,9 +16,15 @@
     const password1 = document.getElementById('id_password1');
     const password2 = document.getElementById('id_password2');
     const feedback = document.getElementById('password-feedback');
+
     function checkPasswords() {
       if (!password1.value) {
         feedback.textContent = '';
+        return;
+      }
+      if (password1.value.length < 4) {
+        feedback.textContent = 'Password must be at least 4 characters.';
+        feedback.style.color = '#d32f2f';
         return;
       }
       if (password2.value && password1.value !== password2.value) {
@@ -33,6 +39,16 @@
     }
     password1.addEventListener('input', checkPasswords);
     password2.addEventListener('input', checkPasswords);
+
+    // Prevent form submission if password is too short
+    document.getElementById('register-form').addEventListener('submit', function(e) {
+      if (password1.value.length < 4) {
+        feedback.textContent = 'Password must be at least 4 characters.';
+        feedback.style.color = '#d32f2f';
+        password1.focus();
+        e.preventDefault();
+      }
+    });
 
     // Single Show Password checkbox for both fields
     document.addEventListener('DOMContentLoaded', function() {

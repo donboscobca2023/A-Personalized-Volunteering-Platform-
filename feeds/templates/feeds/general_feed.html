@@ -18,7 +18,7 @@
           <p>{{ opp.description }}</p>
           <p><strong>Location:</strong> {{ opp.location }}</p>
           <p><strong>Dates:</strong> {{ opp.start_date }} to {{ opp.end_date }}</p>
-          <p><strong>Skills Required:</strong> {{ opp.skills_required }}</p>
+          <p><strong>Skills Recommended:</strong> {{ opp.skills_recommended }}</p>
           {% if opp.id in user_applications %}
             <p><em>You’ve already applied.</em></p>
           {% else %}
@@ -41,7 +41,7 @@
           <p>{{ opp.description }}</p>
           <p><strong>Location:</strong> {{ opp.location }}</p>
           <p><strong>Dates:</strong> {{ opp.start_date }} to {{ opp.end_date }}</p>
-          <p><strong>Skills Required:</strong> {{ opp.skills_required }}</p>
+          <p><strong>Skills Recommended:</strong> {{ opp.skills_recommended }}</p>
           {% if opp.id in user_applications %}
             <p><em>You’ve already applied.</em></p>
           {% else %}
@@ -65,7 +65,7 @@
         <p>{{ opp.description }}</p>
         <p><strong>Location:</strong> {{ opp.location }}</p>
         <p><strong>Dates:</strong> {{ opp.start_date }} to {{ opp.end_date }}</p>
-        <p><strong>Skills Required:</strong> {{ opp.skills_required }}</p>
+  <p><strong>Skills Recommended:</strong> {{ opp.skills_recommended }}</p>
         <p><small>Posted on {{ opp.created_at }}</small></p>
       </div>
     {% endfor %}

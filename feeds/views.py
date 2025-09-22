@@ -10,7 +10,7 @@ from django.http import HttpResponseForbidden
 
 
 def general_feed(request):
-    opportunities = Opportunity.objects.all().order_by("-created_at")
+    opportunities = Opportunity.objects.filter(end_date__gte=timezone.now().date()).order_by("-created_at")
     user_applications = set()
     recommended = []
     new = list(opportunities)
@@ -19,7 +19,7 @@ def general_feed(request):
         user_skills = [s.strip().lower() for s in (request.user.skills or "").split(",") if s.strip()]
         if user_skills:
             def skill_match(opp):
-                opp_skills = [s.strip().lower() for s in (opp.skills_required or "").split(",") if s.strip()]
+                opp_skills = [s.strip().lower() for s in (opp.skills_recommended or "").split(",") if s.strip()]
                 return len(set(user_skills) & set(opp_skills)) > 0
             recommended = [opp for opp in opportunities if skill_match(opp)]
             new = list(opportunities)  # allow overlap
@@ -40,7 +40,7 @@ def ngo_opportunities(request):
     if request.user.role != "ngo":
         return render(request, "403.html")  # optional permission error page
 
-    opportunities = Opportunity.objects.filter(ngo=request.user).order_by("-created_at")
+    opportunities = Opportunity.objects.filter(ngo=request.user, end_date__gte=timezone.now().date()).order_by("-created_at")
     return render(request, "feeds/ngo_feed.html", {"opportunities": opportunities})
 
 
@@ -109,10 +109,10 @@ def volunteer_feed(request):
     if request.user.role != "volunteer":
         return redirect("general_feed")
     user_skills = [s.strip().lower() for s in (request.user.skills or "").split(",") if s.strip()]
-    all_opps = Opportunity.objects.all().order_by("-created_at")
+    all_opps = Opportunity.objects.filter(end_date__gte=timezone.now().date()).order_by("-created_at")
     if user_skills:
         def skill_match(opp):
-            opp_skills = [s.strip().lower() for s in (opp.skills_required or "").split(",") if s.strip()]
+            opp_skills = [s.strip().lower() for s in (opp.skills_recommended or "").split(",") if s.strip()]
             return len(set(user_skills) & set(opp_skills)) > 0
         recommended = [opp for opp in all_opps if skill_match(opp)]
         new = [opp for opp in all_opps if not skill_match(opp)]
